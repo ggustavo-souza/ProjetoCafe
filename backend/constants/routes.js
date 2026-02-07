@@ -1,8 +1,11 @@
 export const ROUTES = {
   HOME: "/",
   DASHBOARD: "/dashboard-admin",
-  AUTH: {
-    LOGIN: "/login",
+  ADMIN: {
+    LOGIN: "/administrador/login",
+  },
+  USER: {
+    LOGIN: "/usuario/login",
   },
   PRODUCTS: {
     LIST: "/products",
