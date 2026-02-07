@@ -1,4 +1,5 @@
 import { useState } from "react"
+import useRealizarLogin from "../services/Auth"
 
 interface ModalProps {
     isOpen: boolean
@@ -9,6 +10,7 @@ interface ModalProps {
 export default function Modal({ isOpen, type, setClose }: ModalProps) {
     const [form, setForm] = useState({ chave: "" });
     const apiUrl: string = "http://localhost:3000";
+    const {logar} = useRealizarLogin()
     console.log(type);
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setForm({ ...form, [e.target.name]: e.target.value });
@@ -30,7 +32,7 @@ export default function Modal({ isOpen, type, setClose }: ModalProps) {
                     .then((data) => {
                         console.log("Resposta do servidor:", data);
                         if (data.success) {
-                            alert("Login de administrador bem-sucedido!");
+                            logar(type);
                         } else {
                             alert("Chave de administrador inválida.");
                         }
@@ -47,51 +49,51 @@ export default function Modal({ isOpen, type, setClose }: ModalProps) {
                     .then((data) => {
                         console.log("Resposta do servidor:", data);
                         if (data.success) {
-                            alert("Login de usuário bem-sucedido!");
+                            logar(type);
                         } else {
                             alert("Chave de usuário inválida.");
                         }
                     })
             }
-        
+
         } catch (error) {
             console.error("Erro ao enviar o formulário:", error);
             alert("Ocorreu um erro ao tentar fazer login. Por favor, tente novamente.");
         }
     }
 
-        if (!isOpen) return null;
-        return (
-            <div className="fixed inset-0 bg-gray-300 flex items-center justify-center">
-                <div className="bg-white p-10 rounded-lg shadow-lg text-center">
-                    <h2 className="text-xl font-semibold mb-4">
-                        {type === "administrador" ? "Login Administrador" : "Login Usuário"}
-                    </h2>
-                    <form onSubmit={handleSubmit}>
-                        <label className="block mb-2" htmlFor="chave">Digite a chave para entrar:</label>
-                        <input
-                            type="text"
-                            name="chave"
-                            placeholder="Chave"
-                            className="border p-2 rounded w-full mb-4"
-                            onChange={handleChange}
-                        />
-                        <button
-                            className="w-full mt-4 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 cursor-pointer"
-                            type="submit"
-                        >
-                            Entrar
-                        </button>
-                    </form>
+    if (!isOpen) return null;
+    return (
+        <div className="fixed inset-0 bg-gray-300 flex items-center justify-center">
+            <div className="bg-white p-10 rounded-lg shadow-lg text-center">
+                <h2 className="text-xl font-semibold mb-4">
+                    {type === "administrador" ? "Login Administrador" : "Login Usuário"}
+                </h2>
+                <form onSubmit={handleSubmit}>
+                    <label className="block mb-2" htmlFor="chave">Digite a chave para entrar:</label>
+                    <input
+                        type="text"
+                        name="chave"
+                        placeholder="Chave"
+                        className="border p-2 rounded w-full mb-4"
+                        onChange={handleChange}
+                    />
                     <button
-                        className="w-full mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 cursor-pointer"
-                        onClick={setClose}
-
+                        className="w-full mt-4 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 cursor-pointer"
+                        type="submit"
                     >
-                        Fechar
+                        Entrar
                     </button>
-                </div>
-            </div>
-        );
+                </form>
+                <button
+                    className="w-full mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 cursor-pointer"
+                    onClick={setClose}
 
-    }
+                >
+                    Fechar
+                </button>
+            </div>
+        </div>
+    );
+
+}
