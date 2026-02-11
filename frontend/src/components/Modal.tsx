@@ -10,8 +10,7 @@ interface ModalProps {
 export default function Modal({ isOpen, type, setClose }: ModalProps) {
     const [form, setForm] = useState({ chave: "" });
     const apiUrl: string = "http://localhost:3000";
-    const {logar} = useRealizarLogin()
-    console.log(type);
+    const { logar } = useRealizarLogin()
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
