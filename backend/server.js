@@ -1,5 +1,5 @@
 import Fastify from 'fastify';
-import { userRoutes } from './routes/userRoutes.js';
+import { userRoutes } from './routes/userRoutes.ts';
 import cors from '@fastify/cors';
 
 const fastify = Fastify({ logger: true });
