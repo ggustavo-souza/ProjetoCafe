@@ -1,5 +1,6 @@
 import { useState } from "react"
 import useRealizarLogin from "../services/Auth"
+import AlertErro from "../components/AlertErro";
 
 interface ModalProps {
     isOpen: boolean
@@ -9,6 +10,7 @@ interface ModalProps {
 
 export default function Modal({ isOpen, type, setClose }: ModalProps) {
     const [form, setForm] = useState({ chave: "" });
+    const [alert, setAlert] = useState({message: "", show: false});
     const apiUrl: string = "http://localhost:3000";
     const { logar } = useRealizarLogin()
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -33,7 +35,8 @@ export default function Modal({ isOpen, type, setClose }: ModalProps) {
                         if (data.success) {
                             logar(type);
                         } else {
-                            alert("Chave de administrador inválida.");
+                            setAlert({message: "A chave digitada está incorreta.", show: true});
+                            setTimeout(() => setAlert({ message: "", show: false }), 3000);
                         }
                     })
             } else {
@@ -50,14 +53,16 @@ export default function Modal({ isOpen, type, setClose }: ModalProps) {
                         if (data.success) {
                             logar(type);
                         } else {
-                            alert("Chave de usuário inválida.");
+                            setAlert({message: "A chave digitada está incorreta.", show: true});
+                            setTimeout(() => setAlert({ message: "", show: false }), 3000);
                         }
                     })
             }
 
         } catch (error) {
             console.error("Erro ao enviar o formulário:", error);
-            alert("Ocorreu um erro ao tentar fazer login. Por favor, tente novamente.");
+            setAlert({message: "Ocorreu um erro no login, tente novamente mais tarde.", show: true});
+            setTimeout(() => setAlert({ message: "", show: false }), 3000);
         }
     }
 
@@ -92,7 +97,10 @@ export default function Modal({ isOpen, type, setClose }: ModalProps) {
                     Fechar
                 </button>
             </div>
+            {alert.show && (
+                <AlertErro message={alert.message} />
+            )}
+            
         </div>
     );
-
 }

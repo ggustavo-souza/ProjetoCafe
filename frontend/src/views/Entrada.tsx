@@ -1,4 +1,4 @@
-import Modal from "../components/Modal";
+import Modal from "../components/ModalChave";
 import { useState } from "react";
 
 export default function Entrada() {
