@@ -9,11 +9,11 @@ interface Usuario {
   cargo: string;
 }
 
-export default function AuthAcess({ children }: AuthAcessProps) {
+export default function AuthAcessUser({ children }: AuthAcessProps) {
   const usuarioStorage = localStorage.getItem("usuarioLogado");
   const usuario: Usuario | null = usuarioStorage ? JSON.parse(usuarioStorage) : null
 
-  if (!usuario || usuario.cargo !== "administrador") {
+  if (!usuario || usuario.cargo !== "usuario") {
     return (
       <>
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">

@@ -36,7 +36,7 @@ export default function Modal({ isOpen, type, setClose }: ModalProps) {
                             logar(type);
                         } else {
                             setAlert({message: "A chave digitada está incorreta.", show: true});
-                            setTimeout(() => setAlert({ message: "", show: false }), 3000);
+                            setTimeout(() => setAlert({ message: "", show: false }), 10000);
                         }
                     })
             } else {
@@ -54,7 +54,7 @@ export default function Modal({ isOpen, type, setClose }: ModalProps) {
                             logar(type);
                         } else {
                             setAlert({message: "A chave digitada está incorreta.", show: true});
-                            setTimeout(() => setAlert({ message: "", show: false }), 3000);
+                            setTimeout(() => setAlert({ message: "", show: false }), 10000);
                         }
                     })
             }
@@ -62,7 +62,7 @@ export default function Modal({ isOpen, type, setClose }: ModalProps) {
         } catch (error) {
             console.error("Erro ao enviar o formulário:", error);
             setAlert({message: "Ocorreu um erro no login, tente novamente mais tarde.", show: true});
-            setTimeout(() => setAlert({ message: "", show: false }), 3000);
+            setTimeout(() => setAlert({ message: "", show: false }), 10000);
         }
     }
 
@@ -79,7 +79,7 @@ export default function Modal({ isOpen, type, setClose }: ModalProps) {
                         type="text"
                         name="chave"
                         placeholder="Chave"
-                        className="border p-2 rounded w-full mb-4"
+                        className="p-2 rounded w-full mb-4 mt-3 border-2 border-gray-300 focus:border-blue-500 focus:outline-none"
                         onChange={handleChange}
                     />
                     <button

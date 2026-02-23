@@ -2,8 +2,9 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import './assets/css/main.css'; // importando o css main pro tailwind;
 import Entrada from './views/Entrada'
 import HomeAdmin from './views/admin/HomeAdmin';
-import HomeCliente from './views/user/HomeCliente';
+import HomeUsuario from './views/user/HomeUsuario';
 import AuthAcess from './services/useAuth';
+import AuthAcessUser from './services/useAuthUser';
 
 function App() {
 
@@ -12,7 +13,11 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<Entrada />} />
-          <Route path="/cliente" element={<HomeCliente />} />
+          <Route path="/usuario" element={
+            <AuthAcessUser>
+              <HomeUsuario />
+            </AuthAcessUser>
+          } />
           <Route path="/admin" element={
             <AuthAcess>
               <HomeAdmin />
