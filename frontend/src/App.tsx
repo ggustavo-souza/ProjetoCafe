@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import 'bootstrap-icons/font/bootstrap-icons.css'; // importando os icones do bootstrap;
 import './assets/css/main.css'; // importando o css main pro tailwind;
 import Entrada from './views/Entrada'
 import HomeAdmin from './views/admin/HomeAdmin';
