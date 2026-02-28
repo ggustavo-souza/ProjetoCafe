@@ -73,10 +73,11 @@ export default function Modal({ isOpen, type, setClose }: ModalProps) {
                 <h2 className="text-xl font-semibold mb-4">
                     {type === "administrador" ? "Login Administrador" : "Login Usuário"}
                 </h2>
+                {/* aqui ta o formulário da chave */}
                 <form onSubmit={handleSubmit}>
                     <label className="block mb-2" htmlFor="chave">Digite a chave para entrar:</label>
                     <input
-                        type="text"
+                        type="password"
                         name="chave"
                         placeholder="Chave"
                         className="p-2 rounded w-full mb-4 mt-3 border-2 border-gray-300 focus:border-blue-500 focus:outline-none"
