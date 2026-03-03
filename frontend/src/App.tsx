@@ -10,6 +10,7 @@ import CardapioAdmin from './views/admin/CardapioAdmin';
 import CardapioAdicionar from './views/admin/cardapio/CardapioAdicionar';
 import CardapioEditar from './views/admin/cardapio/CardapioEditar';
 import CardapioExcluir from './views/admin/cardapio/CardapioExcluir';
+import CardapioEditarItem from './views/admin/cardapio/CardapioEditarItem';
 
 function App() {
 
@@ -38,12 +39,17 @@ function App() {
               <CardapioAdicionar />
             </AuthAcess>
           } />
-          <Route path='/admin/cardapio/editar/:id' element={
+          <Route path='/admin/cardapio/editar/' element={
             <AuthAcess>
               <CardapioEditar />
             </AuthAcess>
           } />
-          <Route path='/admin/cardapio/excluir/:id' element={
+          <Route path='/admin/cardapio/editar/:id' element={
+            <AuthAcess>
+              <CardapioEditarItem />
+            </AuthAcess>
+          } />
+          <Route path='/admin/cardapio/excluir' element={
             <AuthAcess>
               <CardapioExcluir />
             </AuthAcess>
