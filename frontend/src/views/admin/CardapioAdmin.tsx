@@ -13,7 +13,7 @@ export default function CardapioAdmin() {
                 <OpcoesCardapioAdmin />
                 <button 
                     className="bg-red-500 text-white p-3 rounded mt-8 cursor-pointer hover:bg-red-600 transition-colors duration-300"
-                    onClick={() => navigate(-1)}>
+                    onClick={() => navigate("/admin")}>
                         <i className="bi bi-arrow-left me-2">
                     </i>Voltar
                 </button>
