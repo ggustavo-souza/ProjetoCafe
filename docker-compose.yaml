@@ -1,0 +1,46 @@
+services:
+  # banco de dados (postgres)
+  db:
+    image: postgres:15-alpine
+    container_name: bancoCafeteria
+    restart: always
+    environment:
+      POSTGRES_USER: localhost
+      POSTGRES_PASSWORD: senha123
+      POSTGRES_DB: bancoCafeteria
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # backend (typescript + fastify)
+  backend:
+    build: ./backend
+    container_name: cafeteria_backend
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      # IMPORTANTE: O host aqui é 'db' (o nome do serviço acima)
+      DATABASE_URL: "postgresql://admin:password123@db:5432/cafeteria_db"
+    depends_on:
+      - db
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+
+  # frontend (react com vite)
+  frontend:
+    build: ./frontend
+    container_name: cafeteria_frontend
+    restart: always
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+
+volumes:
+  postgres_data:
