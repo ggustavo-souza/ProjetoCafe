@@ -9,8 +9,10 @@ CREATE TABLE IF NOT EXISTS itemsCardapio (
 
 CREATE TABLE IF NOT EXISTS pedidos (
     id serial PRIMARY KEY NOT NULL,
-    mesa_id int NOT NULL,
-    total DECIMAL(5, 2) NOT NULL,
+    mesa_numero int NOT NULL,
+    total DECIMAL(5, 2) NOT NULL
 );
+
+// comando pra rodar o postgres no docker: docker exec -it bancoCafeteria psql -U admin -d bancoCafeteria
 
 
