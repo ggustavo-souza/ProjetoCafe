@@ -1,6 +1,3 @@
-CREATE DATABASE IF NOT EXISTS bancocafeteria;
-USE bancocafeteria;
-
 CREATE TABLE IF NOT EXISTS itemsCardapio (
     id serial PRIMARY KEY NOT NULL,
     nome VARCHAR(100) NOT NULL,
@@ -12,9 +9,8 @@ CREATE TABLE IF NOT EXISTS itemsCardapio (
 
 CREATE TABLE IF NOT EXISTS pedidos (
     id serial PRIMARY KEY NOT NULL,
-    mesa_id serial NOT NULL,
+    mesa_id int NOT NULL,
     total DECIMAL(5, 2) NOT NULL,
-    FOREIGN KEY (cliente_id) REFERENCES clientes(id)
 );
 
 
