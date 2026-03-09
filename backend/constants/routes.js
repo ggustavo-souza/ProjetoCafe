@@ -5,10 +5,10 @@ export const ROUTES = {
   USER: {
     LOGIN: "/usuario/login",
   },
-  PRODUCTS: {
-    LIST: "/products",
-    CREATE: "/products/create",
-    DELETE: "/products/delete",
-    UPDATE: "/products/update"
+  CARDAPIO: {
+    LIST: "/cardapio",
+    CREATE: "/cardapio/create",
+    DELETE: "/cardapio/delete",
+    EDIT: "/cardapio/edit"
   },
 };
