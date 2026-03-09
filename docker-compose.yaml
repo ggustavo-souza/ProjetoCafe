@@ -5,9 +5,9 @@ services:
     container_name: bancoCafeteria
     restart: always
     environment:
-      POSTGRES_USER: localhost
-      POSTGRES_PASSWORD: senha123
-      POSTGRES_DB: bancoCafeteria
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=senha123
+      - POSTGRES_DB=bancoCafeteria
     ports:
       - "5432:5432"
     volumes:
@@ -22,7 +22,7 @@ services:
       - "3000:3000"
     environment:
       # IMPORTANTE: O host aqui é 'db' (o nome do serviço acima)
-      DATABASE_URL: "postgresql://admin:password123@db:5432/cafeteria_db"
+      - DATABASE_URL=postgresql://postgres:senha123@db:5432/bancoCafeteria
     depends_on:
       - db
     volumes:

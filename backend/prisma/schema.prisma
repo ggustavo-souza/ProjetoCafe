@@ -28,7 +28,7 @@ model Pedido {
 }
 
 model ItemPedido {
-  id Int @id default(autoincrement())
+  id Int @id @default(autoincrement())
   pedidoId Int
   produtoId Int
   quantidade Int
