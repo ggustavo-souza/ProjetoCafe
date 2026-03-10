@@ -14,7 +14,7 @@ model Produto {
   descricao String
   preco Decimal @db.Decimal(10,2) @default(0)
   categoria String
-  imagem Int
+  imagem String
   itensPedido ItemPedido[]
 }
 
