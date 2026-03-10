@@ -12,7 +12,7 @@ model Produto {
   id Int @id @default(autoincrement())
   nome String
   descricao String
-  preco Int
+  preco Decimal @db.Decimal(10,2) @default(0)
   categoria String
   imagem Int
   itensPedido ItemPedido[]
@@ -23,7 +23,7 @@ model Pedido {
   dataCriacao DateTime @default(now())
   status String @default("PENDENTE") // pendente, preparando, entregue, cancelado
   total Decimal @db.Decimal(10,2) @default(0)
-  mesa String?
+  numeroPedido Int @default(autoincrement())
   itens ItemPedido[]
 }
 
