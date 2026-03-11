@@ -9,10 +9,12 @@
   },
   "scripts": {
     "dev": "prisma generate && prisma migrate deploy && tsx watch server.ts",
-    "seed": "tsx prisma/seed.ts",
     "db:migrate": "npx prisma migrate dev",
-    "db:studio": "npx prisma studio",
+    "db:studio": "npx prisma studio --browser none --hostname 0.0.0.0",
     "db:gen": "npx prisma generate"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
   },
   "devDependencies": {
     "@types/node": "^25.4.0",
