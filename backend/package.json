@@ -8,7 +8,11 @@
     "pg": "^8.18.0"
   },
   "scripts": {
-    "dev": "prisma generate && prisma migrate deploy && tsx watch server.ts"
+    "dev": "prisma generate && prisma migrate deploy && tsx watch server.ts",
+    "seed": "tsx prisma/seed.ts",
+    "db:migrate": "npx prisma migrate dev",
+    "db:studio": "npx prisma studio",
+    "db:gen": "npx prisma generate"
   },
   "devDependencies": {
     "@types/node": "^25.4.0",
