@@ -1,7 +1,10 @@
+import { getCardapio } from "../database/cardapioBd";
+
 class CardapioController {
     public async getCardapio(request: any, reply: any) {
         try {
-
+            const cardapio = await getCardapio();
+            reply.status(200).send(cardapio);
         }
         catch (error) {
             console.error("Erro ao buscar o cardápio:", error);
