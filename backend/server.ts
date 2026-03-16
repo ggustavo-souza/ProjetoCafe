@@ -1,5 +1,6 @@
 import Fastify from 'fastify';
 import { userRoutes } from './routes/userRoutes.ts';
+import { cardapioRoutes } from './routes/cardapioRoutes.ts'
 import cors from '@fastify/cors';
 
 const fastify = Fastify({ logger: true });
@@ -9,6 +10,7 @@ fastify.register(cors, {
 });
 
 fastify.register(userRoutes);
+fastify.register(cardapioRoutes);
 
 fastify.listen({ 
     port: 3000,

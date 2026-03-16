@@ -8,5 +8,9 @@ export async function cardapioRoutes(fastify: FastifyInstance) {
   fastify.get(ROUTES.CARDAPIO.LIST, async (request, reply) => {
       return cardapioController.getCardapio(request, reply);
   });
+
+  fastify.post(ROUTES.CARDAPIO.CREATE, async (request, reply) => {
+    return cardapioController.criarItem(request, reply);
+  })
   
 }
