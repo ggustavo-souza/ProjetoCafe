@@ -15,7 +15,7 @@ async function seed() {
             descricao: "Café arábica intenso de 30ml",
             preco: 5.50,
             categoria: "bebidas",
-            imagem: "https://images.com/expresso.png"
+            imagem: "imagem1.png"
         },
         {
             id: 2,
@@ -23,7 +23,7 @@ async function seed() {
             descricao: "Tradicional pão de queijo mineiro",
             preco: 4.00,
             categoria: "comidas",
-            imagem: "https://images.com/paodequeijo.png"
+            imagem: "imagem2.jpg"
         },
         {
             id: 3,
@@ -31,7 +31,14 @@ async function seed() {
             descricao: "Café com leite vaporizado e cacau",
             preco: 8.50,
             categoria: "bebidas",
-            imagem: "https://images.com/capuccino.png"
+            imagem: "imagem3.jpg"
+        },
+        {
+            nome: "Açaí batido",
+            descricao: "Açaí delicioso batido com acompanhamentos",
+            preco: 10.00,
+            categoria: "bebidas",
+            imagem: "imagem4.jpeg"
         }
     ]).returning();
 
