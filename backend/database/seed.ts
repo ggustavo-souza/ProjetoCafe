@@ -34,6 +34,7 @@ async function seed() {
             imagem: "imagem3.jpg"
         },
         {
+            id: 4,
             nome: "Açaí batido",
             descricao: "Açaí delicioso batido com acompanhamentos",
             preco: 10.00,
