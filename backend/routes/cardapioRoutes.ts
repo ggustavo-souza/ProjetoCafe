@@ -9,8 +9,17 @@ export async function cardapioRoutes(fastify: FastifyInstance) {
       return cardapioController.getCardapio(request, reply);
   });
 
+  fastify.get(ROUTES.CARDAPIO.VIEW, async (request, reply) => {
+    return cardapioController.getItem(request, reply);
+  })
+
   fastify.post(ROUTES.CARDAPIO.CREATE, async (request, reply) => {
     return cardapioController.criarItem(request, reply);
   })
+
+  fastify.put(ROUTES.CARDAPIO.EDIT, async (request, reply) => {
+    return cardapioController.editarItem(request, reply);
+  })
+
   
 }
