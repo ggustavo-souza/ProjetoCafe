@@ -1,4 +1,4 @@
-import FormOpcoesCardapio from "../../../components/FormOpcoesCardapio"
+import FormOpcoesCardapio from "../../components/FormOpcoesCardapio";
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom";
 
@@ -10,11 +10,14 @@ export default function CardapioEditar() {
     const navigate = useNavigate();
     const [modalOpcoes, setModalOpcoes] = useState(false);
     const [modalType, setModalType] = useState<"editar" | "excluir">("editar");
+    const [idItem, setIdItem] = useState(0);
 
-    const abrirModal = (type: "editar" | "excluir") => {
+    const abrirModal = (type: "editar" | "excluir", idItem: number) => {
         setModalType(type);
         setModalOpcoes(true);
+        setIdItem(idItem);
     }
+
     interface Produto {
         id: number;
         nome: string;
@@ -68,15 +71,15 @@ export default function CardapioEditar() {
                                 <p className="font-bold text-xl">{produto.id} - {produto.nome}</p>
                                 <p className="mt-2">{produto.descricao}</p>
                                 <p className="font-semibold text-xl text-green-600 mt-3">R${produto.preco}</p>
-                                <button 
+                                <button
                                     className="cursor-pointer hover:bg-blue-600 p-3 bg-blue-500 rounded-md mt-4 w-full text-white"
-                                    onClick={() => abrirModal("editar")}
+                                    onClick={() => abrirModal("editar", produto.id)}
                                 >
                                     <i className="bi bi-pencil me-3"></i>Editar Item
                                 </button>
-                                <button 
+                                <button
                                     className="cursor-pointer hover:bg-blue-500 hover:text-white p-3 border-2 border-blue-500 rounded-md mt-4 w-full text-blue-500"
-                                    onClick={() => abrirModal("excluir")}
+                                    onClick={() => abrirModal("excluir", produto.id)}
                                 >
                                     <i className="bi bi-trash me-3"></i>Excluir Item
                                 </button>
@@ -90,7 +93,12 @@ export default function CardapioEditar() {
                     </div>
                 </div>
             </main>
-
+            <FormOpcoesCardapio
+                modalOpcoes={modalOpcoes}
+                modalType={modalType}
+                idItem={idItem}
+                setClose={() => setModalOpcoes(false)}
+            />
         </>
     )
 }
