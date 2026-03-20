@@ -40,6 +40,14 @@ class CardapioDb {
             .set(dados)
             .where(eq(produtos.id, dados.id))
     }
+
+    public deletarItemCardapio = async (dados: any) => {
+        if(!dados) {
+            console.log("Não existem dados ou eles não são compatíveis!")
+        }
+
+        await db.delete(produtos).where(eq(produtos.id, dados.id))
+    }
 }
 
 export const cardapioBd = new CardapioDb();

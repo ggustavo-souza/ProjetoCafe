@@ -64,6 +64,19 @@ class CardapioController {
             reply.status(500).send({ error: "Erro ao criar item no cardápio." })
         }
     }
+
+    public async deletarItem(request: any, reply: any) {
+        try {
+            const { id } = request.params;
+            const dados = {
+                id: id
+            }
+            await cardapioBd.deletarItemCardapio(dados);
+        } catch (error) {
+
+        }
+
+    }
 }
 
 export const cardapioController = new CardapioController();
