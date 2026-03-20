@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useCallback } from "react"
 import AlertErro from "./AlertErro"
 
 interface formProps {
@@ -25,26 +25,30 @@ export default function FormOpcoesCardapio({ modalOpcoes, modalType, idItem, set
 
     const [item, setItem] = useState<Item | null>(null);
 
-    useEffect(() => {
+    const carregarItem = useCallback(async () => {
         if (!idItem || modalType !== 'editar') return;
 
-        const carregarItem = async () => {
-            setItem(null);
-            try {
-                const response = await fetch(`${apiUrl}/cardapio/${idItem}`, {
-                    method: 'GET',
-                    headers: {
-                        "Content-Type": "application/json"
-                    }
-                });
-                const data = await response.json();
-                setItem(data);
-            } catch (error) {
-                console.log(error);
-            }
+        setItem(null);
+        try {
+            const response = await fetch(`${apiUrl}/cardapio/${idItem}`, {
+                method: 'GET',
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+            
+            if (!response.ok) throw new Error("Erro ao buscar o item");
+
+            const data = await response.json();
+            setItem(data);
+        } catch (error) {
+            console.log("Erro ao carregar item:", error);
         }
+    }, [apiUrl, idItem, modalType]); 
+
+    useEffect(() => {
         carregarItem();
-    }, [idItem, modalType]);
+    }, [carregarItem]);
 
     async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -55,7 +59,7 @@ export default function FormOpcoesCardapio({ modalOpcoes, modalType, idItem, set
             descricao: formData.get("descricao"),
             preco: Number(formData.get("preco")),
             categoria: formData.get("categoria"),
-            imagem: item?.imagem // Se ainda não fez o upload, mantemos a antiga
+            imagem: item?.imagem // se ainda não fez o upload, mantém a antiga
         };
 
         try {
@@ -75,6 +79,32 @@ export default function FormOpcoesCardapio({ modalOpcoes, modalType, idItem, set
             setAlert({ message: "Ocorreu um erro ao editar o item...", show: true });
             setTimeout(() => setAlert({ message: "", show: false }), 5000);
         }
+    }
+
+    async function handleExcluir(id: number) {
+        const dados = {
+            id: id
+        }
+
+        try {
+            if(dados) {
+                const response = await fetch(`${apiUrl}/cardapio/${dados.id}`, {
+                    method: "DELETE",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(dados),
+                })
+
+                if(response.ok) {
+                    atualizarLista();
+                    setClose();
+                }
+            }
+        } catch (error) {
+            console.log("Ocorreu um erro ao tentar deletar este item!", error)
+            setAlert({ message: "Ocorreu um erro ao deletar o item...", show: true });
+            setTimeout(() => setAlert({ message: "", show: false }), 5000);
+        }
+
     }
 
     if (!modalOpcoes) return null;
@@ -181,8 +211,11 @@ export default function FormOpcoesCardapio({ modalOpcoes, modalType, idItem, set
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center">
                     <div className="bg-white p-10 rounded-xl">
                         <p>Deseja realmente excluir o item #{idItem}?</p>
-                        <button className="bg-red-500 text-white p-2 mt-5 me-2 rounded-lg cursor-pointer hover:bg-red-600">Sim, excluir</button>
-                        <button onClick={setClose} className="p-2 border rounded-lg cursor-pointer hover:bg-blue-50">Cancelar</button>
+                        <button 
+                        className="bg-red-500 font-medium text-white p-3 mt-5 me-2 rounded-lg cursor-pointer hover:bg-red-600"
+                        onClick={() => handleExcluir(idItem)}
+                        >Sim, excluir</button>
+                        <button onClick={setClose} className="p-3 font-medium border rounded-lg cursor-pointer hover:bg-blue-50">Cancelar</button>
                     </div>
                 </div>
             )}
