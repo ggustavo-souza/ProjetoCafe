@@ -1,11 +1,19 @@
 import FormOpcoesCardapio from "../../components/FormOpcoesCardapio";
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { useNavigate } from "react-router-dom";
+
+interface Produto {
+    id: number;
+    nome: string;
+    descricao: string;
+    preco: number;
+    imagem: string;
+}
 
 
 export default function CardapioEditar() {
     const apiUrl: string = "http://localhost:3000";
-    const [produtos, setProdutos] = useState([]);
+    const [produtos, setProdutos] = useState<Produto[]>([]);
     const imagesUrl: string = "/images/"
     const navigate = useNavigate();
     const [modalOpcoes, setModalOpcoes] = useState(false);
@@ -18,34 +26,28 @@ export default function CardapioEditar() {
         setIdItem(idItem);
     }
 
-    interface Produto {
-        id: number;
-        nome: string;
-        descricao: string;
-        preco: number;
-        imagem: string;
-    }
+    const carregarCardapio = useCallback(async () => {
+        try {
+            const response = await fetch(`${apiUrl}/cardapio`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+
+            if (!response.ok) throw new Error("Erro na rede");
+
+            const data = await response.json();
+            setProdutos(data);
+        } catch (error) {
+            console.error("Erro ao carregar cardápio:", error);
+        }
+    }, [apiUrl]); 
 
     useEffect(() => {
-        const carregarCardapio = async () => {
-            try {
-                const response = await fetch(`${apiUrl}/cardapio`, {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                })
-                const data = await response.json();
-
-                console.log("Informações recebidas:", data);
-                setProdutos(data);
-
-            } catch (error) {
-                console.error("Ocorreu um erro ao tentar conseguir os dados!:", error);
-            }
-        };
         carregarCardapio();
-    }, []);
+    }, [carregarCardapio]);
+
 
     return (
         <>
@@ -98,6 +100,7 @@ export default function CardapioEditar() {
                 modalType={modalType}
                 idItem={idItem}
                 setClose={() => setModalOpcoes(false)}
+                atualizarLista={carregarCardapio}
             />
         </>
     )
