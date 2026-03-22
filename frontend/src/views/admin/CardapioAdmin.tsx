@@ -1,4 +1,5 @@
 import FormOpcoesCardapio from "../../components/FormOpcoesCardapio";
+import FormAdicionarCardapio from "../../components/FormAdicionarCardapio"
 import { useEffect, useState, useCallback } from "react"
 import { useNavigate } from "react-router-dom";
 
@@ -17,13 +18,18 @@ export default function CardapioEditar() {
     const imagesUrl: string = "/images/"
     const navigate = useNavigate();
     const [modalOpcoes, setModalOpcoes] = useState(false);
+    const [modalAdicionar, setModalAdicionar] = useState(false);
     const [modalType, setModalType] = useState<"editar" | "excluir">("editar");
     const [idItem, setIdItem] = useState(0);
 
-    const abrirModal = (type: "editar" | "excluir", idItem: number) => {
+    const abrirModalOpcoes = (type: "editar" | "excluir", idItem: number) => {
         setModalType(type);
         setModalOpcoes(true);
         setIdItem(idItem);
+    }
+
+    const abrirModalAdicionar = () => {
+        setModalAdicionar(true);
     }
 
     const carregarCardapio = useCallback(async () => {
@@ -75,13 +81,13 @@ export default function CardapioEditar() {
                                 <p className="font-semibold text-xl text-green-600 mt-3">R${produto.preco}</p>
                                 <button
                                     className="cursor-pointer hover:bg-blue-600 p-3 bg-blue-500 rounded-md mt-4 w-full text-white"
-                                    onClick={() => abrirModal("editar", produto.id)}
+                                    onClick={() => abrirModalOpcoes("editar", produto.id)}
                                 >
                                     <i className="bi bi-pencil me-3"></i>Editar Item
                                 </button>
                                 <button
                                     className="cursor-pointer hover:bg-blue-500 hover:text-white p-3 border-2 border-blue-500 rounded-md mt-4 w-full text-blue-500"
-                                    onClick={() => abrirModal("excluir", produto.id)}
+                                    onClick={() => abrirModalOpcoes("excluir", produto.id)}
                                 >
                                     <i className="bi bi-trash me-3"></i>Excluir Item
                                 </button>
@@ -89,7 +95,10 @@ export default function CardapioEditar() {
                         </div>
                     ))}
 
-                    <div className="hover:bg-blue-500 hover:text-white cursor-pointer shadow-xl w-full max-w-sm rounded-xl overflow-hidden border-2 border-blue-500 text-blue-500 text-center flex flex-col justify-center items-center min-h-100">
+                    <div 
+                    className="hover:bg-blue-500 hover:text-white cursor-pointer shadow-xl w-full max-w-sm rounded-xl overflow-hidden border-2 border-blue-500 text-blue-500 text-center flex flex-col justify-center items-center min-h-100"
+                    onClick={() => abrirModalAdicionar()}
+                    >
                         <i className="bi bi-plus text-4xl"></i>
                         <p className="font-bold text-xl">Adicionar Item</p>
                     </div>
@@ -100,6 +109,11 @@ export default function CardapioEditar() {
                 modalType={modalType}
                 idItem={idItem}
                 setClose={() => setModalOpcoes(false)}
+                atualizarLista={carregarCardapio}
+            />
+            <FormAdicionarCardapio 
+                modalAdicionar={modalAdicionar}
+                setClose={() => setModalAdicionar(false)}
                 atualizarLista={carregarCardapio}
             />
         </>
