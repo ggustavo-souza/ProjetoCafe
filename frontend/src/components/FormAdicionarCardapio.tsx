@@ -17,19 +17,11 @@ export default function FormAdicionarCardapio({ modalAdicionar, setClose, atuali
         e.preventDefault();
 
         const formData = new FormData(e.currentTarget);
-        const dados = {
-            nome: formData.get("nome"),
-            descricao: formData.get("descricao"),
-            preco: Number(formData.get("preco")),
-            categoria: formData.get("categoria"),
-            imagem: formData.get("imagem"),
-        }
 
         try {
             const response = await fetch(`${apiUrl}/cardapio`, {
                 method: 'POST',
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(dados)
+                body: formData
             })
             if (response.ok) {
                 atualizarLista();

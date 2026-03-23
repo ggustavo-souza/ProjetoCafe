@@ -15,7 +15,7 @@ interface Produto {
 export default function CardapioEditar() {
     const apiUrl: string = "http://localhost:3000";
     const [produtos, setProdutos] = useState<Produto[]>([]);
-    const imagesUrl: string = "/images/"
+    const imagesUrl: string = `${apiUrl}/public/`
     const navigate = useNavigate();
     const [modalOpcoes, setModalOpcoes] = useState(false);
     const [modalAdicionar, setModalAdicionar] = useState(false);
