@@ -1,4 +1,11 @@
 import { cardapioBd } from "../database/cardapioBd";
+import fs from 'node:fs';
+import { pipeline } from 'node:stream/promises';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 class CardapioController {
     public async getCardapio(request: any, reply: any) {
@@ -49,19 +56,35 @@ class CardapioController {
     }
 
     public async criarItem(request: any, reply: any) {
+        if (!request.isMultipart()) {
+            return reply.status(400).send({ error: "Envio inválido. Use FormData." });
+        }
+        
+        const data = await request.file();
+
+        const nome = data.fields.nome?.value;
+        const descricao = data.fields.descricao?.value;
+        const preco = parseFloat(data.fields.preco?.value);
+        const categoria = data.fields.categoria?.value;
+
+        const nomeArquivo = `${Date.now()}-${data.filename}`;
+        const caminhoArquivo = path.join(__dirname, '../public/images', nomeArquivo);
+
+        await pipeline(data.file, fs.createWriteStream(caminhoArquivo));
+
+        const dadosParaBanco = {
+            nome,
+            descricao,
+            preco,
+            categoria,
+            imagem: `/images/${nomeArquivo}`
+        };
+
         try {
-            const dados = {
-                nome: request.body.nome,
-                descricao: request.body.descricao,
-                preco: request.body.preco,
-                categoria: request.body.categoria,
-                imagem: request.body.imagem
-            }
-            await cardapioBd.criarItemCardapio(dados);
-            reply.status(200).send({ success: "O item foi adicionado!" })
+            await cardapioBd.criarItemCardapio(dadosParaBanco);
+            reply.status(200).send({ success: "O item foi adicionado!" });
         } catch (error) {
-            console.error("Erro ao criar item no cardápio.")
-            reply.status(500).send({ error: "Erro ao criar item no cardápio." })
+            reply.status(500).send({ error: `Erro ao salvar no banco: ${error} ` });
         }
     }
 

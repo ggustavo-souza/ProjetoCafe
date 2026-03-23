@@ -12,14 +12,16 @@ class CardapioDb {
             throw new Error("Erro ao buscar o cardápio");
         }
     }
+
     public criarItemCardapio = async (dados: any) => {
-        if(!dados) {
+        if (!dados) {
             console.log("Não existem dados ou eles não são compatíveis!")
         }
         await db.insert(produtos).values(dados);
     }
+    
     public getItem = async (id: number) => {
-        if(!id) {
+        if (!id) {
             console.log("Não há id para consultar o produto!");
         }
         try {
@@ -32,7 +34,7 @@ class CardapioDb {
     }
 
     public editarItemCardapio = async (dados: any) => {
-        if(!dados) {
+        if (!dados) {
             console.log("Não existem dados ou eles não são compatíveis!")
         }
 
@@ -42,7 +44,7 @@ class CardapioDb {
     }
 
     public deletarItemCardapio = async (dados: any) => {
-        if(!dados) {
+        if (!dados) {
             console.log("Não existem dados ou eles não são compatíveis!")
         }
 

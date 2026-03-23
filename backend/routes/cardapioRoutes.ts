@@ -2,11 +2,19 @@ import { ROUTES } from "../constants/routes";
 import type { FastifyInstance } from 'fastify';
 import 'dotenv/config';
 import { cardapioController } from "../controllers/cardapioController.ts";
+import multipart from '@fastify/multipart'
 
 export async function cardapioRoutes(fastify: FastifyInstance) {
-  //pegar todos
+
+  fastify.register(multipart, {
+    limits: {
+      fileSize: 5 * 1024 * 1024
+    }
+  });
+
+
   fastify.get(ROUTES.CARDAPIO.LIST, async (request, reply) => {
-      return cardapioController.getCardapio(request, reply);
+    return cardapioController.getCardapio(request, reply);
   });
   // pegar um
   fastify.get(ROUTES.CARDAPIO.VIEW, async (request, reply) => {
@@ -24,5 +32,5 @@ export async function cardapioRoutes(fastify: FastifyInstance) {
   fastify.delete(ROUTES.CARDAPIO.DELETE, async (request, reply) => {
     return cardapioController.deletarItem(request, reply);
   })
-  
+
 }
