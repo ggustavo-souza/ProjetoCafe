@@ -1,6 +1,7 @@
 import { useState } from "react"
 import useRealizarLogin from "../services/Auth"
 import AlertErro from "../components/AlertErro";
+import LoadingCircle from "./Loading";
 
 interface ModalProps {
     isOpen: boolean
@@ -11,6 +12,7 @@ interface ModalProps {
 export default function Modal({ isOpen, type, setClose }: ModalProps) {
     const [form, setForm] = useState({ chave: "" });
     const [alert, setAlert] = useState({message: "", show: false});
+    const [loading, setLoading] = useState(false);
     const apiUrl: string = "http://localhost:3000";
     const { logar } = useRealizarLogin()
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -20,6 +22,7 @@ export default function Modal({ isOpen, type, setClose }: ModalProps) {
     async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
         e.preventDefault();
         console.log("form enviado com a chave:", form.chave, "e tipo:", type);
+        setLoading(true);
         try {
             if (type === "administrador") {
                 await fetch(`${apiUrl}/administrador/login`, {
@@ -33,13 +36,16 @@ export default function Modal({ isOpen, type, setClose }: ModalProps) {
                     .then((data) => {
                         console.log("Resposta do servidor:", data);
                         if (data.success) {
+                            setLoading(false)
                             logar(type);
                         } else {
+                            setLoading(false);
                             setAlert({message: "A chave digitada está incorreta.", show: true});
-                            setTimeout(() => setAlert({ message: "", show: false }), 10000);
+                            setTimeout(() => setAlert({ message: "", show: false }), 5000);
                         }
                     })
             } else {
+                setLoading(true)
                 await fetch(`${apiUrl}/usuario/login`, {
                     method: "POST",
                     headers: {
@@ -51,18 +57,21 @@ export default function Modal({ isOpen, type, setClose }: ModalProps) {
                     .then((data) => {
                         console.log("Resposta do servidor:", data);
                         if (data.success) {
+                            setLoading(false)
                             logar(type);
                         } else {
+                            setLoading(false)
                             setAlert({message: "A chave digitada está incorreta.", show: true});
-                            setTimeout(() => setAlert({ message: "", show: false }), 10000);
+                            setTimeout(() => setAlert({ message: "", show: false }), 5000);
                         }
                     })
             }
 
         } catch (error) {
+            setLoading(false)
             console.error("Erro ao enviar o formulário:", error);
             setAlert({message: "Ocorreu um erro no login, tente novamente mais tarde.", show: true});
-            setTimeout(() => setAlert({ message: "", show: false }), 10000);
+            setTimeout(() => setAlert({ message: "", show: false }), 5000);
         }
     }
 
@@ -76,6 +85,7 @@ export default function Modal({ isOpen, type, setClose }: ModalProps) {
                 {/* aqui ta o formulário da chave */}
                 <form onSubmit={handleSubmit}>
                     <label className="block mb-2" htmlFor="chave">Digite a chave para entrar:</label>
+                    {loading && (<LoadingCircle />)}
                     <input
                         type="password"
                         name="chave"
@@ -91,7 +101,7 @@ export default function Modal({ isOpen, type, setClose }: ModalProps) {
                     </button>
                 </form>
                 <button
-                    className="w-full mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 cursor-pointer"
+                    className="w-full mb-2 mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 cursor-pointer"
                     onClick={setClose}
 
                 >

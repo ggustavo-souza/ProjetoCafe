@@ -2,6 +2,7 @@ import FormOpcoesCardapio from "../../components/FormOpcoesCardapio";
 import FormAdicionarCardapio from "../../components/FormAdicionarCardapio"
 import { useEffect, useState, useCallback } from "react"
 import { useNavigate } from "react-router-dom";
+import LoadingCircle from "../../components/Loading";
 
 interface Produto {
     id: number;
@@ -14,6 +15,7 @@ interface Produto {
 
 export default function CardapioEditar() {
     const apiUrl: string = "http://localhost:3000";
+    const [loading, setLoading] = useState(false);
     const [produtos, setProdutos] = useState<Produto[]>([]);
     const imagesUrl: string = `${apiUrl}/public/`
     const navigate = useNavigate();
@@ -33,6 +35,7 @@ export default function CardapioEditar() {
     }
 
     const carregarCardapio = useCallback(async () => {
+        setLoading(true);
         try {
             const response = await fetch(`${apiUrl}/cardapio`, {
                 method: "GET",
@@ -41,11 +44,15 @@ export default function CardapioEditar() {
                 },
             });
 
-            if (!response.ok) throw new Error("Erro na rede");
-
+            if (!response.ok) {
+                setLoading(false)
+                throw new Error("Erro na rede")
+            }
             const data = await response.json();
             setProdutos(data);
+            setLoading(false)
         } catch (error) {
+            setLoading(false)
             console.error("Erro ao carregar cardápio:", error);
         }
     }, [apiUrl]); 
@@ -68,6 +75,7 @@ export default function CardapioEditar() {
             </header>
             <main>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-10 gap-6 justify-items-center mx-auto max-w-7xl px-10">
+                    {loading && (<LoadingCircle />)}
                     {produtos.map((produto: Produto) => (
                         <div key={produto.id} className="shadow-xl w-full max-w-sm rounded-xl overflow-hidden flex flex-col">
                             <img
