@@ -73,7 +73,7 @@ export default function CardapioEditar() {
                 </button>
                 <p className="mt-3 sm:mt-0 md:mt-0 lg:mt-0 xl:mt-0 ">Editar cardápio</p>
             </header>
-            <main>
+            <main className="mb-7">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-10 gap-6 justify-items-center mx-auto max-w-7xl px-10">
                     {loading && (<LoadingCircle />)}
                     {produtos.map((produto: Produto) => (
@@ -94,7 +94,7 @@ export default function CardapioEditar() {
                                     <i className="bi bi-pencil me-3"></i>Editar Item
                                 </button>
                                 <button
-                                    className="cursor-pointer hover:bg-blue-500 hover:text-white p-3 border-2 border-blue-500 rounded-md mt-4 w-full text-blue-500"
+                                    className="cursor-pointer transition hover:bg-blue-500 hover:text-white p-3 border-2 border-blue-500 rounded-md mt-4 w-full text-blue-500"
                                     onClick={() => abrirModalOpcoes("excluir", produto.id)}
                                 >
                                     <i className="bi bi-trash me-3"></i>Excluir Item
@@ -104,7 +104,7 @@ export default function CardapioEditar() {
                     ))}
 
                     <div 
-                    className="hover:bg-blue-500 hover:text-white cursor-pointer shadow-xl w-full max-w-sm rounded-xl overflow-hidden border-2 border-blue-500 text-blue-500 text-center flex flex-col justify-center items-center min-h-100"
+                    className="hover:bg-blue-500 transition hover:text-white cursor-pointer shadow-xl w-full max-w-sm rounded-xl overflow-hidden border-2 border-blue-500 text-blue-500 text-center flex flex-col justify-center items-center min-h-100"
                     onClick={() => abrirModalAdicionar()}
                     >
                         <i className="bi bi-plus text-4xl"></i>
