@@ -22,6 +22,8 @@ export default function FormOpcoesCardapio({ modalOpcoes, modalType, idItem, set
 
     const [alert, setAlert] = useState({ message: "", show: false });
     const apiUrl: string = "http://localhost:3000";
+    const [previewUrl, setPreviewUrl] = useState(String);
+    const imageUrl: string = `${apiUrl}/public/`
 
     const [item, setItem] = useState<Item | null>(null);
 
@@ -36,7 +38,7 @@ export default function FormOpcoesCardapio({ modalOpcoes, modalType, idItem, set
                     "Content-Type": "application/json"
                 }
             });
-            
+
             if (!response.ok) throw new Error("Erro ao buscar o item");
 
             const data = await response.json();
@@ -44,7 +46,7 @@ export default function FormOpcoesCardapio({ modalOpcoes, modalType, idItem, set
         } catch (error) {
             console.log("Erro ao carregar item:", error);
         }
-    }, [apiUrl, idItem, modalType]); 
+    }, [apiUrl, idItem, modalType]);
 
     useEffect(() => {
         carregarItem();
@@ -54,20 +56,12 @@ export default function FormOpcoesCardapio({ modalOpcoes, modalType, idItem, set
         e.preventDefault();
 
         const formData = new FormData(e.currentTarget);
-        const dadosAtualizados = {
-            nome: formData.get("nome"),
-            descricao: formData.get("descricao"),
-            preco: Number(formData.get("preco")),
-            categoria: formData.get("categoria"),
-            imagem: item?.imagem // se ainda não fez o upload, mantém a antiga
-        };
 
         try {
             if (modalType === 'editar') {
                 const response = await fetch(`${apiUrl}/cardapio/${idItem}`, {
                     method: "PUT",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(dadosAtualizados),
+                    body: formData,
                 })
                 if (response.ok) {
                     atualizarLista();
@@ -87,14 +81,14 @@ export default function FormOpcoesCardapio({ modalOpcoes, modalType, idItem, set
         }
 
         try {
-            if(dados) {
+            if (dados) {
                 const response = await fetch(`${apiUrl}/cardapio/${dados.id}`, {
                     method: "DELETE",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(dados),
                 })
 
-                if(response.ok) {
+                if (response.ok) {
                     atualizarLista();
                     setClose();
                 }
@@ -104,8 +98,15 @@ export default function FormOpcoesCardapio({ modalOpcoes, modalType, idItem, set
             setAlert({ message: "Ocorreu um erro ao deletar o item...", show: true });
             setTimeout(() => setAlert({ message: "", show: false }), 5000);
         }
-
     }
+
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const imageUrl = URL.createObjectURL(file);
+            setPreviewUrl(imageUrl);
+        }
+    };
 
     if (!modalOpcoes) return null;
     if (modalType === 'editar' && !item) {
@@ -123,12 +124,12 @@ export default function FormOpcoesCardapio({ modalOpcoes, modalType, idItem, set
 
                         <div className="flex justify-between items-center mb-6">
                             <h2 className="text-xl font-bold text-gray-800">Editar Produto</h2>
-                            <button onClick={setClose} className="text-gray-400 hover:text-gray-600 transition text-2xl leading-none cursor-pointer">
+                            <button onClick={() => { setClose(); setPreviewUrl("") }} className="text-gray-400 hover:text-gray-600 transition text-2xl leading-none cursor-pointer">
                                 &times;
                             </button>
                         </div>
 
-                        <form onSubmit={handleSubmit} className="flex flex-col gap-4" key={item.id}>
+                        <form onSubmit={handleSubmit} className="flex flex-col gap-4" key={item.id} encType="multipart/form-data">
 
                             <div>
                                 <label htmlFor="id" className="block text-sm font-semibold text-gray-700 mb-1">ID</label>
@@ -175,21 +176,29 @@ export default function FormOpcoesCardapio({ modalOpcoes, modalType, idItem, set
                                 </div>
                             </div>
 
-                            <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">Imagem Atual</label>
-                                <div className="border border-gray-200 rounded-lg p-2 inline-block bg-gray-50">
-                                    <img
-                                        src={`/images/${item.imagem}`}
-                                        alt={`Preview de ${item.nome}`}
-                                        className="w-20 h-20 object-cover rounded-md shadow-sm"
-                                    />
-                                </div>
+                            <label htmlFor="imagem" className="block text-sm font-semibold text-gray-700 mb-1">Imagem</label>
+                            <input
+                                type="file"
+                                formEncType="multipart/form-data"
+                                name="imagem"
+                                id="imagem"
+                                onChange={handleImageChange}
+                                className="w-full p-2 border border-gray-300 cursor-pointer rounded-lg mt-1 mb-3 outline-none hover:ring-2 hover:ring-blue-500 hover:border-blue-500"
+                            />
+
+                            <label className="block text-sm font-semibold text-gray-700 mb-2">Imagem Atual</label>
+                            <div className="border border-gray-200 rounded-lg p-2 inline-block bg-gray-50">
+                                <img
+                                    src={previewUrl ? previewUrl : `${imageUrl}${item.imagem}`}
+                                    alt={"Preview da imagem"}
+                                    className="w-20 h-20 object-cover rounded-md shadow-sm"
+                                />
                             </div>
 
                             <div className="flex justify-end gap-3 mt-4 pt-4 border-t border-gray-100">
                                 <button
                                     type="button"
-                                    onClick={setClose}
+                                    onClick={() => { setClose(); setPreviewUrl("") }}
                                     className="cursor-pointer px-5 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:ring-2 focus:ring-gray-200 transition"
                                 >
                                     Cancelar
@@ -211,11 +220,11 @@ export default function FormOpcoesCardapio({ modalOpcoes, modalType, idItem, set
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center">
                     <div className="bg-white p-10 rounded-xl">
                         <p>Deseja realmente excluir o item #{idItem}?</p>
-                        <button 
-                        className="bg-red-500 font-medium text-white p-3 mt-5 me-2 rounded-lg cursor-pointer hover:bg-red-600"
-                        onClick={() => handleExcluir(idItem)}
+                        <button
+                            className="bg-red-500 font-medium text-white p-3 mt-5 me-2 rounded-lg cursor-pointer hover:bg-red-600"
+                            onClick={() => handleExcluir(idItem)}
                         >Sim, excluir</button>
-                        <button onClick={setClose} className="p-3 font-medium border rounded-lg cursor-pointer hover:bg-blue-50">Cancelar</button>
+                        <button onClick={() => { setClose(); setPreviewUrl("") }} className="p-3 font-medium border rounded-lg cursor-pointer hover:bg-blue-50">Cancelar</button>
                     </div>
                 </div>
             )}

@@ -36,22 +36,50 @@ class CardapioController {
     }
 
     public async editarItem(request: any, reply: any) {
-        try {
-            const { id } = request.params;
-            const dados = {
-                id: Number(id),
-                nome: request.body.nome,
-                descricao: request.body.descricao,
-                preco: request.body.preco,
-                categoria: request.body.categoria,
-                imagem: request.body.imagem
-            }
+        if (!request.isMultipart()) {
+            return reply.status(400).send({ error: "Envio inválido. Use FormData." });
+        }
 
-            await cardapioBd.editarItemCardapio(dados);
-            reply.status(200).send({ success: "A edição ocorreu com sucesso!" });
-        } catch (error) {
-            console.error("Erro ao editar item do cardápio:", error);
-            return reply.status(500).send({ error: "Erro no controller" });
+        const data = await request.file();
+
+        const id = data.fields.id.value;
+        const nome = data.fields.nome?.value;
+        const descricao = data.fields.descricao?.value;
+        const preco = parseFloat(data.fields.preco?.value);
+        const categoria = data.fields.categoria?.value;
+
+        if (data.filename !== "") {
+            const nomeArquivo = `${Date.now()}-${data.filename}`;
+            const caminhoArquivo = path.join(__dirname, '../public/images', nomeArquivo);
+            await pipeline(data.file, fs.createWriteStream(caminhoArquivo));
+
+            const dadosParaBanco = {
+                id,
+                nome,
+                descricao,
+                preco,
+                categoria,
+                imagem: `/images/${nomeArquivo}`
+            };
+            mandarQueryEditar(dadosParaBanco);
+        } else {
+            const dadosParaBanco = {
+                id,
+                nome,
+                descricao,
+                preco,
+                categoria
+            }
+            mandarQueryEditar(dadosParaBanco)
+        }
+
+        async function mandarQueryEditar(dadosParaBanco: any) {
+            try {
+                await cardapioBd.editarItemCardapio(dadosParaBanco);
+                reply.status(200).send({ success: "O item foi editado!" });
+            } catch (error) {
+                reply.status(500).send({ error: `Erro ao editar no banco: ${error} ` });
+            }
         }
     }
 
@@ -59,13 +87,13 @@ class CardapioController {
         if (!request.isMultipart()) {
             return reply.status(400).send({ error: "Envio inválido. Use FormData." });
         }
-        
+
         const data = await request.file();
 
-        const nome = data.fields.nome?.value;
-        const descricao = data.fields.descricao?.value;
-        const preco = parseFloat(data.fields.preco?.value);
-        const categoria = data.fields.categoria?.value;
+        const nome = data.fields.nome.value;
+        const descricao = data.fields.descricao.value;
+        const preco = parseFloat(data.fields.preco.value);
+        const categoria = data.fields.categoria.value;
 
         const nomeArquivo = `${Date.now()}-${data.filename}`;
         const caminhoArquivo = path.join(__dirname, '../public/images', nomeArquivo);

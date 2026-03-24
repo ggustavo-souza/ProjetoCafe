@@ -12,7 +12,7 @@ export async function cardapioRoutes(fastify: FastifyInstance) {
     }
   });
 
-
+  //pegar todos
   fastify.get(ROUTES.CARDAPIO.LIST, async (request, reply) => {
     return cardapioController.getCardapio(request, reply);
   });
