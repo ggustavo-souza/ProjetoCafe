@@ -28,7 +28,7 @@ export default function FormOpcoesCardapio({ modalOpcoes, modalType, idItem, set
     const [item, setItem] = useState<Item | null>(null);
 
     const carregarItem = useCallback(async () => {
-        if (!idItem || modalType !== 'editar') return;
+        if (!idItem || modalType !== 'editar' || modalOpcoes ) return;
 
         setItem(null);
         try {
@@ -36,7 +36,8 @@ export default function FormOpcoesCardapio({ modalOpcoes, modalType, idItem, set
                 method: 'GET',
                 headers: {
                     "Content-Type": "application/json"
-                }
+                },
+                cache: 'no-store'
             });
 
             if (!response.ok) throw new Error("Erro ao buscar o item");
@@ -46,7 +47,7 @@ export default function FormOpcoesCardapio({ modalOpcoes, modalType, idItem, set
         } catch (error) {
             console.log("Erro ao carregar item:", error);
         }
-    }, [apiUrl, idItem, modalType]);
+    }, [apiUrl, idItem, modalType, modalOpcoes]);
 
     useEffect(() => {
         carregarItem();
@@ -124,12 +125,12 @@ export default function FormOpcoesCardapio({ modalOpcoes, modalType, idItem, set
 
                         <div className="flex justify-between items-center mb-6">
                             <h2 className="text-xl font-bold text-gray-800">Editar Produto</h2>
-                            <button onClick={() => { setClose(); setPreviewUrl("") }} className="text-gray-400 hover:text-gray-600 transition text-2xl leading-none cursor-pointer">
+                            <button onClick={() => { setClose(); setPreviewUrl(""); atualizarLista(); }} className="text-gray-400 hover:text-gray-600 transition text-2xl leading-none cursor-pointer">
                                 &times;
                             </button>
                         </div>
 
-                        <form onSubmit={handleSubmit} className="flex flex-col gap-4" key={item.id} encType="multipart/form-data">
+                        <form onSubmit={handleSubmit} className="flex flex-col gap-4" key={`${item.id}-${item.nome}-${item.descricao}-${item.preco}-${item.categoria}-${item.imagem}`} encType="multipart/form-data">
 
                             <div>
                                 <label htmlFor="id" className="block text-sm font-semibold text-gray-700 mb-1">ID</label>
@@ -224,7 +225,7 @@ export default function FormOpcoesCardapio({ modalOpcoes, modalType, idItem, set
                             className="bg-red-500 font-medium text-white p-3 mt-5 me-2 rounded-lg cursor-pointer hover:bg-red-600"
                             onClick={() => handleExcluir(idItem)}
                         >Sim, excluir</button>
-                        <button onClick={() => { setClose(); setPreviewUrl("") }} className="p-3 font-medium border rounded-lg cursor-pointer hover:bg-blue-50">Cancelar</button>
+                        <button onClick={() => { setClose(); setPreviewUrl(""); atualizarLista() }} className="p-3 font-medium border rounded-lg cursor-pointer hover:bg-blue-50">Cancelar</button>
                     </div>
                 </div>
             )}
