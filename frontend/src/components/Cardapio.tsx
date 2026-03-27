@@ -1,8 +1,28 @@
-import Cardapio from "../../components/Cardapio"
+import FormOpcoesCardapio from "./FormOpcoesCardapio";
+import FormAdicionarCardapio from "./FormAdicionarCardapio"
+import { useEffect, useState, useCallback } from "react"
+import { useNavigate } from "react-router-dom";
+import LoadingCircle from "./Loading";
 
-export default function CardapioEditar() {
+interface Produto {
+    id: number;
+    nome: string;
+    descricao: string;
+    preco: number;
+    imagem: string;
+}
+
+// interface Usuario {
+//     cargo: string;
+// }
+
+// inserir parametro para verificar o cargo
+export default function Cardapio() {
     const apiUrl: string = "http://localhost:3000";
     const [loading, setLoading] = useState(false);
+
+    const usuario = localStorage.getItem("usuarioLogado")
+    console.log(usuario);
     const [produtos, setProdutos] = useState<Produto[]>([]);
     const imagesUrl: string = `${apiUrl}/public/`
     const navigate = useNavigate();
@@ -16,6 +36,8 @@ export default function CardapioEditar() {
         setModalOpcoes(true);
         setIdItem(idItem);
     }
+
+    //inserir a lógica para verificar o cargo de quem está usando
 
     const abrirModalAdicionar = () => {
         setModalAdicionar(true);
@@ -50,6 +72,7 @@ export default function CardapioEditar() {
 
 
     return (
+        // retornar a interface do cardápio de acordo com o cargo do usuário que está usando.
         <>
             <header className="relative flex flex-1 flex-col items-center justify-center text-black p-4 text-2xl font-bold mt-5">
                 <button
