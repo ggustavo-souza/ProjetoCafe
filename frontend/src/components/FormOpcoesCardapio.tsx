@@ -28,7 +28,7 @@ export default function FormOpcoesCardapio({ modalOpcoes, modalType, idItem, set
     const [item, setItem] = useState<Item | null>(null);
 
     const carregarItem = useCallback(async () => {
-        if (!idItem || modalType !== 'editar' || modalOpcoes ) return;
+        if (!idItem || modalType !== 'editar' || !modalOpcoes ) return;
 
         setItem(null);
         try {
