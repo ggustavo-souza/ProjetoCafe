@@ -4,8 +4,8 @@ import './assets/css/main.css'; // importando o css main pro tailwind;
 import Entrada from './views/Entrada'
 import HomeAdmin from './views/admin/HomeAdmin';
 import HomeUsuario from './views/user/HomeUsuario';
-import AuthAcess from './services/useAuth';
-import AuthAcessUser from './services/useAuthUser';
+import AuthAcess from './hooks/useAuth';
+import AuthAcessUser from './hooks/useAuthUser';
 import CardapioAdmin from './views/admin/CardapioAdmin';
 
 function App() {
