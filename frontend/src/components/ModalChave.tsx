@@ -2,6 +2,7 @@ import { useState } from "react"
 import useRealizarLogin from "../services/Auth"
 import AlertErro from "../components/AlertErro";
 import LoadingCircle from "./Loading";
+import { realizarLogin } from "../services/loginService";
 
 interface ModalProps {
     isOpen: boolean
@@ -11,9 +12,8 @@ interface ModalProps {
 
 export default function Modal({ isOpen, type, setClose }: ModalProps) {
     const [form, setForm] = useState({ chave: "" });
-    const [alert, setAlert] = useState({message: "", show: false});
+    const [alert, setAlert] = useState({ message: "", show: false });
     const [loading, setLoading] = useState(false);
-    const apiUrl: string = "http://localhost:3000";
     const { logar } = useRealizarLogin()
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setForm({ ...form, [e.target.name]: e.target.value });
@@ -24,53 +24,20 @@ export default function Modal({ isOpen, type, setClose }: ModalProps) {
         console.log("form enviado com a chave:", form.chave, "e tipo:", type);
         setLoading(true);
         try {
-            if (type === "administrador") {
-                await fetch(`${apiUrl}/administrador/login`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ chave: form.chave }),
-                })
-                    .then((res) => res.json())
-                    .then((data) => {
-                        console.log("Resposta do servidor:", data);
-                        if (data.success) {
-                            setLoading(false)
-                            logar(type);
-                        } else {
-                            setLoading(false);
-                            setAlert({message: "A chave digitada está incorreta.", show: true});
-                            setTimeout(() => setAlert({ message: "", show: false }), 5000);
-                        }
-                    })
+            const data = await realizarLogin(type, form.chave)
+            console.log("Resposta do servidor:", data);
+            if (data.success) {
+                setLoading(false)
+                logar(type);
             } else {
-                setLoading(true)
-                await fetch(`${apiUrl}/usuario/login`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ chaveUsuario: form.chave }),
-                })
-                    .then((res) => res.json())
-                    .then((data) => {
-                        console.log("Resposta do servidor:", data);
-                        if (data.success) {
-                            setLoading(false)
-                            logar(type);
-                        } else {
-                            setLoading(false)
-                            setAlert({message: "A chave digitada está incorreta.", show: true});
-                            setTimeout(() => setAlert({ message: "", show: false }), 5000);
-                        }
-                    })
+                setLoading(false);
+                setAlert({ message: "A chave digitada está incorreta.", show: true });
+                setTimeout(() => setAlert({ message: "", show: false }), 5000);
             }
-
         } catch (error) {
             setLoading(false)
             console.error("Erro ao enviar o formulário:", error);
-            setAlert({message: "Ocorreu um erro no login, tente novamente mais tarde.", show: true});
+            setAlert({ message: "Ocorreu um erro no login, tente novamente mais tarde.", show: true });
             setTimeout(() => setAlert({ message: "", show: false }), 5000);
         }
     }
@@ -111,7 +78,7 @@ export default function Modal({ isOpen, type, setClose }: ModalProps) {
             {alert.show && (
                 <AlertErro message={alert.message} />
             )}
-            
+
         </div>
     );
 }
