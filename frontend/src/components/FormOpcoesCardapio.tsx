@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react"
 import AlertErro from "./AlertErro"
+import { deleteCardapio, editCardapio, viewCardapio } from "../services/cardapioService"
 
 interface formProps {
     modalOpcoes: boolean,
@@ -28,26 +29,18 @@ export default function FormOpcoesCardapio({ modalOpcoes, modalType, idItem, set
     const [item, setItem] = useState<Item | null>(null);
 
     const carregarItem = useCallback(async () => {
-        if (!idItem || modalType !== 'editar' || !modalOpcoes ) return;
+        if (!idItem || modalType !== 'editar' || !modalOpcoes) return;
 
         setItem(null);
         try {
-            const response = await fetch(`${apiUrl}/cardapio/${idItem}`, {
-                method: 'GET',
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                cache: 'no-store'
-            });
-
+            const response = await viewCardapio(idItem);
             if (!response.ok) throw new Error("Erro ao buscar o item");
-
             const data = await response.json();
             setItem(data);
         } catch (error) {
             console.log("Erro ao carregar item:", error);
         }
-    }, [apiUrl, idItem, modalType, modalOpcoes]);
+    }, [idItem, modalType, modalOpcoes]);
 
     useEffect(() => {
         carregarItem();
@@ -60,10 +53,7 @@ export default function FormOpcoesCardapio({ modalOpcoes, modalType, idItem, set
 
         try {
             if (modalType === 'editar') {
-                const response = await fetch(`${apiUrl}/cardapio/${idItem}`, {
-                    method: "PUT",
-                    body: formData,
-                })
+                const response = await editCardapio(idItem, formData);
                 if (response.ok) {
                     atualizarLista();
                     setClose();
@@ -83,12 +73,7 @@ export default function FormOpcoesCardapio({ modalOpcoes, modalType, idItem, set
 
         try {
             if (dados) {
-                const response = await fetch(`${apiUrl}/cardapio/${dados.id}`, {
-                    method: "DELETE",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(dados),
-                })
-
+                const response = await deleteCardapio(dados.id);
                 if (response.ok) {
                     atualizarLista();
                     setClose();

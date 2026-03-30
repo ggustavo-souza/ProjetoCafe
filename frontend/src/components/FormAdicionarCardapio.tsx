@@ -1,5 +1,6 @@
 import { useState } from "react";
 import AlertErro from "./AlertErro";
+import { addCardapio } from "../services/cardapioService";
 
 interface formProps {
     modalAdicionar: boolean;
@@ -10,7 +11,6 @@ interface formProps {
 export default function FormAdicionarCardapio({ modalAdicionar, setClose, atualizarLista }: formProps) {
 
     const [alert, setAlert] = useState({ message: "", show: false });
-    const apiUrl: string = "http://localhost:3000";
     const [previewUrl, setPreviewUrl] = useState(String);
 
     async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
@@ -19,10 +19,7 @@ export default function FormAdicionarCardapio({ modalAdicionar, setClose, atuali
         const formData = new FormData(e.currentTarget);
 
         try {
-            const response = await fetch(`${apiUrl}/cardapio`, {
-                method: 'POST',
-                body: formData
-            })
+            const response = await addCardapio(formData);
             if (response.ok) {
                 atualizarLista();
                 setClose();
