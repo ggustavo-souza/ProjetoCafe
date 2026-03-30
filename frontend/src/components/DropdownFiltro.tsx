@@ -1,13 +1,16 @@
 import { useState } from 'react';
 
-export default function DropFiltro() {
-    const [isOpen, setIsOpen] = useState(false);
-    const [filtroSelecionado, setFiltroSelecionado] = useState('');
+interface DropFiltroProps {
+    filtroSelecionado: string;
+    setFiltroSelecionado: (filtro: string) => void;
+}
 
-    const handleSelect = (opcao) => {
+export default function DropFiltro({ filtroSelecionado, setFiltroSelecionado }: DropFiltroProps) {
+    const [isOpen, setIsOpen] = useState(false);
+
+    const handleSelect = (opcao: string) => {
         setFiltroSelecionado(opcao);
-        setIsOpen(false); 
-        console.log("Filtro aplicado:", opcao); // futura funcao de filtrar
+        setIsOpen(false);
     };
 
     return (
@@ -20,28 +23,18 @@ export default function DropFiltro() {
                     <i className="bi bi-funnel"></i>
                     {filtroSelecionado ? filtroSelecionado : "Filtrar"}
                 </button>
-
                 {isOpen && (
                     <div className="absolute left-0 mt-2 w-full bg-white border border-gray-200 rounded-md shadow-lg z-10">
                         <ul className="py-1 flex flex-col">
-                            <li
-                                onClick={() => handleSelect('Comidas')}
-                                className="px-6 py-4 hover:bg-gray-100 cursor-pointer text-md"
-                            >
-                                Comidas
-                            </li>
-                            <li
-                                onClick={() => handleSelect('Bebidas')}
-                                className="px-6 py-4 hover:bg-gray-100 cursor-pointer text-md"
-                            >
-                                Bebidas
-                            </li>
-                            <li
-                                onClick={() => handleSelect('Sobremesas')}
-                                className="px-6 py-4 hover:bg-gray-100 cursor-pointer text-md"
-                            >
-                                Sobremesas
-                            </li>
+                            {['Comidas', 'Bebidas', 'Sobremesas'].map((opcao) => (
+                                <li
+                                    key={opcao}
+                                    onClick={() => handleSelect(opcao)}
+                                    className="px-6 py-4 hover:bg-gray-100 cursor-pointer text-md"
+                                >
+                                    {opcao}
+                                </li>
+                            ))}
                         </ul>
                     </div>
                 )}
@@ -49,7 +42,7 @@ export default function DropFiltro() {
             {filtroSelecionado && (
                 <div className="mt-4 text-sm text-gray-600">
                     Filtro aplicado: <span className="font-semibold">{filtroSelecionado}</span>
-                    <button 
+                    <button
                         onClick={() => setFiltroSelecionado('')}
                         className="ml-5 p-3 rounded-md bg-blue-500 text-white hover:bg-blue-700 cursor-pointer"
                     >

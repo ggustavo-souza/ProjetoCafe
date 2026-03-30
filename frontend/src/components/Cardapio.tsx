@@ -11,6 +11,7 @@ interface Produto {
     nome: string;
     descricao: string;
     preco: number;
+    categoria: string;
     imagem: string;
 }
 
@@ -23,6 +24,7 @@ export default function Cardapio({ type }: Usuario) {
     const [loading, setLoading] = useState(false);
     const [produtos, setProdutos] = useState<Produto[]>([]);
     const imagesUrl: string = `${apiUrl}/public/`
+    const [filtro, setFiltro] = useState("");
     const navigate = useNavigate();
     const [modalOpcoes, setModalOpcoes] = useState(false);
     const [modalAdicionar, setModalAdicionar] = useState(false);
@@ -57,6 +59,10 @@ export default function Cardapio({ type }: Usuario) {
         carregarCardapio();
     }, [carregarCardapio]);
 
+    const produtosFiltrados = filtro
+        ? produtos.filter(produto => produto.categoria === filtro)
+        : produtos;
+
 
     return (
         // retornar a interface do cardápio de acordo com o cargo do usuário que está usando.
@@ -76,21 +82,31 @@ export default function Cardapio({ type }: Usuario) {
                     </p>
                 </div>
             </header>
-            <DropFiltro />
+            <DropFiltro
+                filtroSelecionado={filtro}
+                setFiltroSelecionado={setFiltro}
+            />
             <main className="mb-7 flex flex-col items-center">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-10 gap-6 justify-items-center mx-auto max-w-7xl px-10 w-full">
                     {loading && <LoadingCircle />}
+                    {produtosFiltrados.length === 0 && (
+                        <div className="col-span-full flex flex-col items-center justify-center">
+                            <i className="bi bi-emoji-frown text-6xl text-gray-400"></i>
+                            <p className="text-gray-600 text-lg col-span-full text-center mt-5">Nenhum produto encontrado para a categoria selecionada.</p>
+                        </div>
+                    )}
 
-                    {produtos.map((produto: Produto) => (
-                        <div key={produto.id} className="shadow-xl w-full max-w-sm rounded-xl overflow-hidden flex flex-col items-center text-center">
+                    {produtosFiltrados.map((produto: Produto) => (
+                        <div key={produto.id} className="shadow-xl w-full max-w-sm rounded-xl transition-all duration-400 hover:scale-105 overflow-hidden flex flex-col items-center text-center">
                             <img
                                 className="w-full h-48 object-cover"
                                 src={`${imagesUrl}${produto.imagem}`}
                                 alt="Foto do produto"
                             />
 
-                            <div className="p-10 grow flex flex-col items-center justify-center w-full">
+                            <div className="p-10 grow flex flex-col items-start justify-center w-full">
                                 <p className="font-bold text-xl">{produto.id} - {produto.nome}</p>
+                                <p className="text-lg text-gray-600">{produto.categoria}</p>
                                 <p className="mt-2">{produto.descricao}</p>
                                 <p className="font-semibold text-xl text-green-600 mt-3">R${produto.preco}</p>
 

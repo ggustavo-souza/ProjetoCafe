@@ -14,7 +14,7 @@ async function seed() {
             nome: "Café Expresso",
             descricao: "Café arábica intenso de 30ml",
             preco: 5.50,
-            categoria: "bebidas",
+            categoria: "Bebidas",
             imagem: "/images/imagem1.png"
         },
         {
@@ -22,7 +22,7 @@ async function seed() {
             nome: "Pão de Queijo",
             descricao: "Tradicional pão de queijo mineiro",
             preco: 4.00,
-            categoria: "comidas",
+            categoria: "Comidas",
             imagem: "/images/imagem2.jpg"
         },
         {
@@ -30,7 +30,7 @@ async function seed() {
             nome: "Capuccino Cremoso",
             descricao: "Café com leite vaporizado e cacau",
             preco: 8.50,
-            categoria: "bebidas",
+            categoria: "Bebidas",
             imagem: "/images/imagem3.jpg"
         },
         {
@@ -38,7 +38,7 @@ async function seed() {
             nome: "Açaí batido",
             descricao: "Açaí delicioso batido com acompanhamentos",
             preco: 10.00,
-            categoria: "bebidas",
+            categoria: "Bebidas",
             imagem: "/images/imagem4.jpeg"
         }
     ]).returning();
