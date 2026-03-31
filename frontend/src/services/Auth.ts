@@ -10,7 +10,7 @@ export default function useRealizarLogin() {
         if (type === 'administrador') {
             navigate('/admin')
         } else {
-            navigate('/usuario')
+            navigate('/usuario') 
         }
     }
 

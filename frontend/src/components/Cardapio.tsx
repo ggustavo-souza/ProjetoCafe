@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import LoadingCircle from "./Loading";
 import DropFiltro from "./DropdownFiltro";
 import { getCardapio } from "../services/cardapioService";
+import PedidoAtual from "./PedidoAtual";
+import ModalMesa from "./ModalMesa";
 
 interface Produto {
     id: number;
@@ -27,6 +29,7 @@ export default function Cardapio({ type }: Usuario) {
     const [filtro, setFiltro] = useState("");
     const navigate = useNavigate();
     const [modalOpcoes, setModalOpcoes] = useState(false);
+    const [modalMesa, setModalMesa] = useState(true);
     const [modalAdicionar, setModalAdicionar] = useState(false);
     const [modalType, setModalType] = useState<"editar" | "excluir">("editar");
     const [idItem, setIdItem] = useState(0);
@@ -67,6 +70,7 @@ export default function Cardapio({ type }: Usuario) {
     return (
         // retornar a interface do cardápio de acordo com o cargo do usuário que está usando.
         <>
+        {type === "usuario" && <ModalMesa isOpen={modalMesa} setClose={() => setModalMesa(false)} />}
             <header className="flex flex-col items-center mx-auto max-w-7xl w-full text-black p-4 mt-5">
                 <div className="relative flex w-full max-w-xl items-center justify-center ">
                     {type === "administrador" && (
@@ -127,13 +131,14 @@ export default function Cardapio({ type }: Usuario) {
                                         </button>
                                     </>
                                 )}
-
-                                <button
-                                    className="cursor-pointer hover:bg-blue-600 p-3 bg-blue-500 rounded-md mt-4 w-full text-white flex justify-center items-center"
-                                // onClick={() => abrirModalOpcoes("editar", produto.id)}
-                                >
-                                    <i className="bi bi-plus me-3"></i>Pedir Item
-                                </button>
+                                {type === "usuario" && (
+                                    <button
+                                        className="cursor-pointer hover:bg-blue-600 p-3 bg-blue-500 rounded-md mt-4 w-full text-white flex justify-center items-center"
+                                        onClick={() => alert("Item adicionado ao pedido!")}
+                                    >
+                                        <i className="bi bi-plus me-3"></i>Pedir Item
+                                    </button>
+                                )}
                             </div>
                         </div>
                     ))}
@@ -149,6 +154,8 @@ export default function Cardapio({ type }: Usuario) {
                     )}
                 </div>
             </main>
+            <PedidoAtual 
+                mesa={localStorage.getItem("mesa")} />
             <FormOpcoesCardapio
                 modalOpcoes={modalOpcoes}
                 modalType={modalType}
