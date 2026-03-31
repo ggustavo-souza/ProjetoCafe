@@ -11,9 +11,5 @@ export const realizarLogin = async (type: "administrador" | "usuario", chave: st
         },
         body: JSON.stringify(body),
     });
-
-    if (!response.ok) {
-        throw new Error("Erro ao realizar login");
-    }
     return await response.json();
 };
