@@ -23,16 +23,19 @@ interface Usuario {
 
 export default function Cardapio({ type }: Usuario) {
     const apiUrl: string = "http://localhost:3000";
-    const [loading, setLoading] = useState(false);
-    const [produtos, setProdutos] = useState<Produto[]>([]);
-    const imagesUrl: string = `${apiUrl}/public/`
-    const [filtro, setFiltro] = useState("");
+    const [loading, setLoading] = useState(false); //loading circle
+    const [produtos, setProdutos] = useState<Produto[]>([]); //carregar o cardápio
+    const imagesUrl: string = `${apiUrl}/public/` //url das imagens
+    const [filtro, setFiltro] = useState(""); // filtro para as categorias
     const navigate = useNavigate();
+    //modais
     const [modalOpcoes, setModalOpcoes] = useState(false);
     const [modalMesa, setModalMesa] = useState(true);
     const [modalAdicionar, setModalAdicionar] = useState(false);
     const [modalType, setModalType] = useState<"editar" | "excluir">("editar");
     const [idItem, setIdItem] = useState(0);
+    // estado para os itens do compoente PedidoAtual
+    const [itensPedido, setItensPedido] = useState<{ id: number; nome: string; preco: number }[]>([]);
 
     const abrirModalOpcoes = (type: "editar" | "excluir", idItem: number) => {
         setModalType(type);
@@ -43,6 +46,15 @@ export default function Cardapio({ type }: Usuario) {
     const abrirModalAdicionar = () => {
         setModalAdicionar(true);
     }
+
+    const adicionarItemPedido = (produto: Produto) => {
+        const novoItem = {
+            id: produto.id,
+            nome: produto.nome,
+            preco: produto.preco,
+        };
+        setItensPedido(prevItens => [...prevItens, novoItem]);
+        }
 
     const carregarCardapio = useCallback(async () => {
         setLoading(true);
@@ -91,7 +103,7 @@ export default function Cardapio({ type }: Usuario) {
                 setFiltroSelecionado={setFiltro}
             />
             <main className="mb-7 flex flex-col items-center">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-10 gap-6 justify-items-center mx-auto max-w-7xl px-10 w-full">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-10 mb-30 gap-6 justify-items-center mx-auto max-w-7xl px-10 w-full">
                     {loading && <LoadingCircle />}
                     {produtosFiltrados.length === 0 && (
                         <div className="col-span-full flex flex-col items-center justify-center">
@@ -101,7 +113,7 @@ export default function Cardapio({ type }: Usuario) {
                     )}
 
                     {produtosFiltrados.map((produto: Produto) => (
-                        <div key={produto.id} className="shadow-xl w-full max-w-sm rounded-xl transition-all duration-400 hover:scale-105 overflow-hidden flex flex-col items-center text-center">
+                        <div key={produto.id} className="shadow-xl w-full max-w-sm rounded-xl my-10 transition-all duration-400 hover:scale-105 overflow-hidden flex flex-col items-center text-center">
                             <img
                                 className="w-full h-48 object-cover"
                                 src={`${imagesUrl}${produto.imagem}`}
@@ -134,7 +146,7 @@ export default function Cardapio({ type }: Usuario) {
                                 {type === "usuario" && (
                                     <button
                                         className="cursor-pointer hover:bg-blue-600 p-3 bg-blue-500 rounded-md mt-4 w-full text-white flex justify-center items-center"
-                                        onClick={() => alert("Item adicionado ao pedido!")}
+                                        onClick={() => adicionarItemPedido(produto)}
                                     >
                                         <i className="bi bi-plus me-3"></i>Pedir Item
                                     </button>
@@ -155,7 +167,9 @@ export default function Cardapio({ type }: Usuario) {
                 </div>
             </main>
             <PedidoAtual 
-                mesa={localStorage.getItem("mesa")} />
+                mesa={localStorage.getItem("mesa")} 
+                itens={itensPedido} 
+            />
             <FormOpcoesCardapio
                 modalOpcoes={modalOpcoes}
                 modalType={modalType}
