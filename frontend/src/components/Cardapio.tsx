@@ -54,7 +54,7 @@ export default function Cardapio({ type }: Usuario) {
             preco: produto.preco,
         };
         setItensPedido(prevItens => [...prevItens, novoItem]);
-        }
+    }
 
     const carregarCardapio = useCallback(async () => {
         setLoading(true);
@@ -82,7 +82,7 @@ export default function Cardapio({ type }: Usuario) {
     return (
         // retornar a interface do cardápio de acordo com o cargo do usuário que está usando.
         <>
-        {type === "usuario" && <ModalMesa isOpen={modalMesa} setClose={() => setModalMesa(false)} />}
+            {type === "usuario" && <ModalMesa isOpen={modalMesa} setClose={() => setModalMesa(false)} />}
             <header className="flex flex-col items-center mx-auto max-w-7xl w-full text-black p-4 mt-5">
                 <div className="relative flex w-full max-w-xl items-center justify-center ">
                     {type === "administrador" && (
@@ -102,8 +102,8 @@ export default function Cardapio({ type }: Usuario) {
                 filtroSelecionado={filtro}
                 setFiltroSelecionado={setFiltro}
             />
-            <main className="mb-7 flex flex-col items-center">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-10 mb-30 gap-6 justify-items-center mx-auto max-w-7xl px-10 w-full">
+            <main className="flex flex-col md:mb-50 sm:mb-50 mb-50 items-center">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-10 mb-60 gap-6 justify-items-center mx-auto max-w-7xl px-10 w-full">
                     {loading && <LoadingCircle />}
                     {produtosFiltrados.length === 0 && (
                         <div className="col-span-full flex flex-col items-center justify-center">
@@ -113,7 +113,7 @@ export default function Cardapio({ type }: Usuario) {
                     )}
 
                     {produtosFiltrados.map((produto: Produto) => (
-                        <div key={produto.id} className="shadow-xl w-full max-w-sm rounded-xl my-10 transition-all duration-400 hover:scale-105 overflow-hidden flex flex-col items-center text-center">
+                        <div key={produto.id} className="shadow-xl w-full max-w-sm rounded-xl transition-all duration-400 hover:scale-105 overflow-hidden flex flex-col items-center text-center">
                             <img
                                 className="w-full h-48 object-cover"
                                 src={`${imagesUrl}${produto.imagem}`}
@@ -166,10 +166,12 @@ export default function Cardapio({ type }: Usuario) {
                     )}
                 </div>
             </main>
-            <PedidoAtual 
-                mesa={localStorage.getItem("mesa")} 
-                itens={itensPedido} 
-            />
+            {type === "usuario" && (
+                <PedidoAtual
+                    mesa={localStorage.getItem("mesa")}
+                    itens={itensPedido}
+                />
+            )}
             <FormOpcoesCardapio
                 modalOpcoes={modalOpcoes}
                 modalType={modalType}
