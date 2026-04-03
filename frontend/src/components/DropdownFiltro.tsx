@@ -18,7 +18,7 @@ export default function DropFiltro({ filtroSelecionado, setFiltroSelecionado }: 
             <div className="relative w-full">
                 <button
                     onClick={() => setIsOpen(!isOpen)}
-                    className="bg-blue-500 w-full justify-center p-2 px-4 text-white rounded-md cursor-pointer hover:bg-blue-600 flex items-center gap-2 transition-colors"
+                    className="bg-blue-500 font-semibold w-full justify-center p-2 px-4 text-white rounded-md cursor-pointer hover:bg-blue-600 flex items-center gap-2 transition-colors"
                 >
                     <i className="bi bi-funnel"></i>
                     {filtroSelecionado ? filtroSelecionado : "Filtrar"}
@@ -30,7 +30,7 @@ export default function DropFiltro({ filtroSelecionado, setFiltroSelecionado }: 
                                 <li
                                     key={opcao}
                                     onClick={() => handleSelect(opcao)}
-                                    className="px-6 py-4 hover:bg-gray-100 cursor-pointer text-md"
+                                    className="px-6 py-4 font-semibold hover:bg-gray-100 cursor-pointer text-md"
                                 >
                                     {opcao}
                                 </li>
@@ -44,7 +44,7 @@ export default function DropFiltro({ filtroSelecionado, setFiltroSelecionado }: 
                     Filtro aplicado: <span className="font-semibold">{filtroSelecionado}</span>
                     <button
                         onClick={() => setFiltroSelecionado('')}
-                        className="ml-5 p-3 rounded-md bg-blue-500 text-white hover:bg-blue-700 cursor-pointer"
+                        className="ml-5 p-3 font-semibold rounded-md bg-blue-500 text-white hover:bg-blue-700 cursor-pointer"
                     >
                         Remover Filtro
                     </button>

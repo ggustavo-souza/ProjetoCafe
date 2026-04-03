@@ -129,14 +129,14 @@ export default function Cardapio({ type }: Usuario) {
                                 {type === "administrador" && (
                                     <>
                                         <button
-                                            className="cursor-pointer hover:bg-blue-600 p-3 bg-blue-500 rounded-md mt-4 w-full text-white flex justify-center items-center"
+                                            className="cursor-pointer font-semibold hover:bg-blue-600 p-3 bg-blue-500 rounded-md mt-4 w-full text-white flex justify-center items-center"
                                             onClick={() => abrirModalOpcoes("editar", produto.id)}
                                         >
                                             <i className="bi bi-pencil me-3"></i>Editar Item
                                         </button>
 
                                         <button
-                                            className="cursor-pointer transition hover:bg-blue-500 hover:text-white p-3 border-2 border-blue-500 rounded-md mt-4 w-full text-blue-500 flex justify-center items-center"
+                                            className="cursor-pointer font-semibold transition hover:bg-blue-500 hover:text-white p-3 border-2 border-blue-500 rounded-md mt-4 w-full text-blue-500 flex justify-center items-center"
                                             onClick={() => abrirModalOpcoes("excluir", produto.id)}
                                         >
                                             <i className="bi bi-trash me-3"></i>Excluir Item
@@ -145,10 +145,10 @@ export default function Cardapio({ type }: Usuario) {
                                 )}
                                 {type === "usuario" && (
                                     <button
-                                        className="cursor-pointer hover:bg-blue-600 p-3 bg-blue-500 rounded-md mt-4 w-full text-white flex justify-center items-center"
+                                        className="font-semibold cursor-pointer hover:bg-blue-600 p-3 bg-blue-500 rounded-md mt-4 w-full text-white flex justify-center items-center"
                                         onClick={() => adicionarItemPedido(produto)}
                                     >
-                                        <i className="bi bi-plus me-3"></i>Pedir Item
+                                        <i className="bi bi-plus me-3 font-semibold text-xl"></i>Pedir Item
                                     </button>
                                 )}
                             </div>
@@ -161,7 +161,7 @@ export default function Cardapio({ type }: Usuario) {
                             onClick={() => abrirModalAdicionar()}
                         >
                             <i className="bi bi-plus text-4xl"></i>
-                            <p className="font-bold text-xl">Adicionar Item</p>
+                            <p className="font-semibold text-xl">Adicionar Item</p>
                         </div>
                     )}
                 </div>
