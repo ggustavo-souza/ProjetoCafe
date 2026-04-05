@@ -1,4 +1,5 @@
 import { useState } from "react";
+import JanelaPagamento from "./JanelaPagamento";
 
 interface Item {
     id: number;
@@ -13,6 +14,7 @@ interface PedidoAtualProps {
 
 export default function PedidoAtual({ mesa, itens }: PedidoAtualProps) {
     const [expandir, setExpandir] = useState(false);
+    const [janelaPagamento, setJanelaPagamento] = useState(false);
     const total = itens.reduce((total, item) => total + item.preco, 0);
 
     return (
@@ -88,12 +90,15 @@ export default function PedidoAtual({ mesa, itens }: PedidoAtualProps) {
                     </div>
                     <button
                         className="w-full cursor-pointer text-white py-4 rounded-md bg-green-500 hover:bg-green-600 transition-colors font-bold text-xl shadow-md"
-                        onClick={() => alert("Lógica de finalizar compra aqui!")}
+                        onClick={() => {setExpandir(false); setJanelaPagamento(true);}}
                     >
                         Finalizar Compra
                     </button>
                 </div>
             </div>
+            {janelaPagamento && (
+                <JanelaPagamento total={total} />
+            )}
         </>
     );
 }
