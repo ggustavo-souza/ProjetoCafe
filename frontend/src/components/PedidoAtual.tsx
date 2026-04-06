@@ -97,7 +97,9 @@ export default function PedidoAtual({ mesa, itens }: PedidoAtualProps) {
                 </div>
             </div>
             {janelaPagamento && (
-                <JanelaPagamento total={total} />
+                <JanelaPagamento 
+                total={total} 
+                setClose={() => setJanelaPagamento(false)} />
             )}
         </>
     );
