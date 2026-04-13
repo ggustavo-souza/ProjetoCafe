@@ -26,7 +26,7 @@ export default function JanelaPagamento({ total, setClose }: janelaPagamentoProp
                             setMetodo={setMetodo}
                         />)}
                     {metodo !== "" && (
-                        <DadosPagamento metodo={metodo} />
+                        <DadosPagamento metodo={metodo} total={total} />
                     )}
                     <p className="text-gray-900 text-lg mt-4"><b>Total:</b> R$ {total.toFixed(2)}</p>
                 </div>
