@@ -12,8 +12,10 @@ export const produtos = pgTable("produtos", {
 
 export const pedidos = pgTable("pedidos", {
     id: serial("id").primaryKey(),
+    formaPagamento: text("forma_pagamento").notNull(),
     mesaNumero: integer("mesa_numero").notNull(),
     total: decimal('total', { precision: 5, scale: 2, mode: 'number' }).notNull(),
+    status: text("status").notNull(),
     criadoEm: timestamp("criado_em").defaultNow().notNull(),
 });
 

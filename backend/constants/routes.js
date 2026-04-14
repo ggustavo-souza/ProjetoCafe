@@ -15,5 +15,12 @@ export const ROUTES = {
   PAYMENT: {
     CREATE: "/payment",        // POST /payment 
     QRCODE: "/payment/qrcode"  // POST /payment/qrcode
+  },
+  PEDIDOS: {
+    CREATE: "/pedidos",        // POST /pedidos 
+    LIST: "/pedidos",          // GET /pedidos
+    VIEW: "/pedidos/:id",     // GET /pedidos/15
+    DELETE: "/pedidos/:id",    // DELETE /pedidos/15
+    EDIT: "/pedidos/:id"       // PUT /pedidos/15 
   }
 };
