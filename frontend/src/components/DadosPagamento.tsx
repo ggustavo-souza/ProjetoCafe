@@ -16,10 +16,32 @@ export default function DadosPagamento({ metodo, total }: DadosPagamentoProps) {
         qrCodeBase64: string; copiaECola: string; paymentId: string
     } | null>(null);
 
+    useEffect(() => {
+        let interval: ReturnType<typeof setTimeout> = setTimeout(() => { });
+
+        if (estadoPagamento === 'pendente' && pixData?.paymentId) {
+            interval = setInterval(async () => {
+                try {
+                    const response = await fetch(`/api/payment_status/${pixData.paymentId}`);
+                    const { status: paymentStatus } = await response.json();
+
+                    if (paymentStatus === 'approved') {
+                        setEstadoPagamento('aprovado');
+                        clearInterval(interval);
+                    }
+                } catch (error) {
+                    console.error("Erro ao checar status", error);
+                    setEstadoPagamento('recusado');
+                    clearInterval(interval);
+                }
+            }, 3000);
+        }
+        return () => clearInterval(interval);
+    }, [estadoPagamento, pixData]);
 
     async function gerarQrcode() {
         try {
-            setEstadoPagamento('pendente');
+            setEstadoPagamento('gerando');
             const response = await createQRcode(total);
             console.log(response)
 
@@ -35,30 +57,8 @@ export default function DadosPagamento({ metodo, total }: DadosPagamentoProps) {
             console.log(error, "Erro ao gerar QR Code")
             setEstadoPagamento('idle')
         }
-
-        useEffect(() => {
-            let interval: ReturnType<typeof setTimeout> = setTimeout(() => { });
-
-            if (estadoPagamento === 'pendente' && pixData?.paymentId) {
-                interval = setInterval(async () => {
-                    try {
-                        const response = await fetch(`/api/payment_status/${pixData.paymentId}`);
-                        const { status: paymentStatus } = await response.json();
-
-                        if (paymentStatus === 'approved') {
-                            setEstadoPagamento('aprovado');
-                            clearInterval(interval);
-                        }
-                    } catch (error) {
-                        console.error("Erro ao checar status", error);
-                        setEstadoPagamento('recusado');
-                        clearInterval(interval);
-                    }
-                }, 3000);
-            }
-            return () => clearInterval(interval);
-        }, [estadoPagamento, pixData]);
     }
+
 
     return (
         <>
