@@ -5,7 +5,7 @@ interface escolhaMetodoProps {
 export default function EscolhaMetodo({ setMetodo }: escolhaMetodoProps) {
     return (
         <>
-            <p className="text-gray-800 font-bold text-center">Escolha o método de pagamento</p>
+            <p className="text-gray-800 mt-3 font-bold text-center">Escolha o método de pagamento</p>
             <div className="flex flex-1 gap-5">
                 {["Pix",].map((metodo) => (
                     <button

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import LoadingCircle from "./Loading";
 import { createQRcode } from "../services/paymentService";
 import { initMercadoPago } from "@mercadopago/sdk-react";
+import Temporizador from "./Temporizador";
 interface DadosPagamentoProps {
     metodo: string;
     total: number;
@@ -34,7 +35,7 @@ export default function DadosPagamento({ metodo, total }: DadosPagamentoProps) {
                     setEstadoPagamento('recusado');
                     clearInterval(interval);
                 }
-            }, 3000);
+            }, 180000);
         }
         return () => clearInterval(interval);
     }, [estadoPagamento, pixData]);
@@ -47,9 +48,9 @@ export default function DadosPagamento({ metodo, total }: DadosPagamentoProps) {
 
             if (response.success && response.data) {
                 setPixData({
-                    qrCodeBase64: response.data.qrCodeBase64,
-                    copiaECola: response.data.copiaECola,
-                    paymentId: response.data.paymentId
+                    qrCodeBase64: response.data.point_of_interaction.transaction_data.qr_code_base64,
+                    copiaECola: response.data.point_of_interaction.transaction_data.qr_code,
+                    paymentId: response.data.id.toString()
                 });
             }
             setEstadoPagamento('pendente')
@@ -64,7 +65,6 @@ export default function DadosPagamento({ metodo, total }: DadosPagamentoProps) {
         <>
             {metodo === "Pix" && (
                 <div className="justify-center ">
-                    <p className="text-gray-800 font-bold text-center">Pagamento via Pix</p>
                     <div className="flex justify-center mt-5">
                         {estadoPagamento === 'idle' && (
                             <button type="submit" className="p-4 bg-blue-500 text-white rounded-lg font-bold cursor-pointer" onClick={gerarQrcode}>Gerar QR Code</button>
@@ -73,32 +73,30 @@ export default function DadosPagamento({ metodo, total }: DadosPagamentoProps) {
                             <LoadingCircle />
                         )}
                         {estadoPagamento === 'pendente' && (
-                            <div className="pix-payment-screen">
-                                <h3>Pague via Pix</h3>
+                            <div className="text-center">
                                 <p>Escaneie o QR Code abaixo com o aplicativo do seu banco:</p>
-
-                                <img
-                                    src={`data:image/jpeg;base64,${pixData?.qrCodeBase64}`}
-                                    alt="QR Code Pix"
-                                    style={{ width: '200px', height: '200px' }}
-                                />
-
-                                <div>
-                                    <p>Ou utilize o Pix Copia e Cola:</p>
-                                    <input type="text" readOnly value={pixData?.copiaECola} />
-                                    <button onClick={() => navigator.clipboard.writeText(pixData?.copiaECola || '')}>
-                                        Copiar
-                                    </button>
+                                <div className="flex justify-center my-3 ">
+                                    <img
+                                        src={`data:image/jpeg;base64,${pixData?.qrCodeBase64}`}
+                                        alt="QR Code Pix"
+                                        style={{ width: '200px', height: '200px' }}
+                                    />
                                 </div>
 
-                                <p><em>Aguardando confirmação do pagamento... (Atualização automática)</em></p>
+                                <div className="">
+                                    <p>Clique para copiar o código:</p>
+                                    <input type="text" className="ring-2 ring-blue-500 rounded-lg p-4 bg-gray-100 my-3" onClick={() => navigator.clipboard.writeText(pixData?.copiaECola || '')} readOnly value={pixData?.copiaECola} />
+                                </div>
+                                <div><h2>{<Temporizador initialMinutes={5} initialSeconds={0} />}</h2></div>
+                                <p className="text-gray-800 font-bold"><em>Aguardando confirmação do pagamento...</em></p>
                             </div>
                         )}
 
                     </div>
-                </div>
+                </div >
 
-            )}
+            )
+            }
         </>
     )
 }

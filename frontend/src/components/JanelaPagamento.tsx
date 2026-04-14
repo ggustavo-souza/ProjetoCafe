@@ -14,8 +14,8 @@ export default function JanelaPagamento({ total, setClose }: janelaPagamentoProp
     return (
         <div className="fixed inset-0 bg-gray-300 flex items-center justify-center z-50">
             <div className="bg-white p-6 md:p-8 rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
-                <div className="flex justify-between items-center mb-6 border-b-2 pb-3 border-gray-200">
-                    <h2 className="text-xl font-bold text-gray-800">Pagamento</h2>
+                <div className="flex justify-between items-center border-b-2 pb-3 border-gray-200">
+                    <h2 className="text-xl font-bold text-gray-800">{metodo === "" ? "Pagamento" : "Pagamento via " + metodo}</h2>
                     <button onClick={() => setClose()} className="text-gray-400 hover:text-gray-600 transition text-4xl leading-none cursor-pointer">
                         &times;
                     </button>
@@ -28,7 +28,6 @@ export default function JanelaPagamento({ total, setClose }: janelaPagamentoProp
                     {metodo !== "" && (
                         <DadosPagamento metodo={metodo} total={total} />
                     )}
-                    <p className="text-gray-900 text-lg mt-4"><b>Total:</b> R$ {total.toFixed(2)}</p>
                 </div>
             </div>
         </div>
