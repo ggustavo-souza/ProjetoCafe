@@ -43,6 +43,33 @@ async function seed() {
         }
     ]).returning();
 
+    const pedidosCriados = await db.insert(pedidos).values([
+        {
+            id: 1,
+            formaPagamento: "Pix",
+            mesaNumero: 1,
+            total: 10.00,
+            status: "Pendente",
+            criadoEm: new Date(),
+        },
+        {
+            id: 2,
+            formaPagamento: "Cartão",
+            mesaNumero: 2,
+            total: 15.00,
+            status: "Pendente",
+            criadoEm: new Date(),
+        },
+        {
+            id: 3,
+            formaPagamento: "Dinheiro",
+            mesaNumero: 3,
+            total: 20.00,
+            status: "Pendente",
+            criadoEm: new Date(),
+        }
+    ]).returning();
+
     console.log(`${inseridos.length} Produtos criados com sucesso!`);
 }
 
