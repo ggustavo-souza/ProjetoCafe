@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-function Temporizador({ initialMinutes = 5, initialSeconds = 0 }) {
+function Temporizador({ initialMinutes = 0, initialSeconds = 0 }) {
     const [minutes, setMinutes] = useState(initialMinutes);
     const [seconds, setSeconds] = useState(initialSeconds);
 
