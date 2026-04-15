@@ -14,7 +14,8 @@ export const ROUTES = {
   },
   PAYMENT: {
     CREATE: "/payment",        // POST /payment 
-    QRCODE: "/payment/qrcode"  // POST /payment/qrcode
+    QRCODE: "/payment/qrcode",  // POST /payment/qrcode
+    STATUS: "/payment/status/:paymentId" // GET /payment/status/123456789
   },
   PEDIDOS: {
     CREATE: "/pedidos",        // POST /pedidos 

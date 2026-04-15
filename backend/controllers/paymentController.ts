@@ -36,6 +36,22 @@ class PaymentController {
             });
         }
     }
+
+    //consultar status do pagamento
+    public async paymentStatus(request: FastifyRequest, reply: FastifyReply) {
+        try {
+            const { paymentId } = request.params as { paymentId: string };
+            const data = await payment.get({ id: paymentId });
+            return reply.code(200).send({ data, success: true });
+        } catch (error: any) {
+            const errorMessage = error?.message || JSON.stringify(error);
+
+            return reply.code(500).send({
+                message: `Erro interno no Servidor: ${errorMessage}`,
+                success: false
+            });
+        }
+    }
 }
 
 export const paymentController = new PaymentController();

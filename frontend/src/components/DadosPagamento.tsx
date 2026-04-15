@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import LoadingCircle from "./Loading";
-import { createQRcode } from "../services/paymentService";
+import { createQRcode, paymentStatus } from "../services/paymentService";
 import { initMercadoPago } from "@mercadopago/sdk-react";
 import Temporizador from "./Temporizador";
 interface DadosPagamentoProps {
@@ -14,7 +14,7 @@ export default function DadosPagamento({ metodo, total }: DadosPagamentoProps) {
 
     const [estadoPagamento, setEstadoPagamento] = useState<'idle' | 'gerando' | 'pendente' | 'aprovado' | 'recusado'>('idle');
     const [pixData, setPixData] = useState<{
-        qrCodeBase64: string; copiaECola: string; paymentId: string
+        qrCodeBase64: string; paymentId: string
     } | null>(null);
 
     useEffect(() => {
@@ -23,10 +23,9 @@ export default function DadosPagamento({ metodo, total }: DadosPagamentoProps) {
         if (estadoPagamento === 'pendente' && pixData?.paymentId) {
             interval = setInterval(async () => {
                 try {
-                    const response = await fetch(`/api/payment_status/${pixData.paymentId}`);
-                    const { status: paymentStatus } = await response.json();
-
-                    if (paymentStatus === 'approved') {
+                    const status = await paymentStatus(pixData.paymentId);
+                    console.log(status.data.status)
+                    if (status.data.status === 'approved') {
                         setEstadoPagamento('aprovado');
                         clearInterval(interval);
                     }
@@ -35,7 +34,7 @@ export default function DadosPagamento({ metodo, total }: DadosPagamentoProps) {
                     setEstadoPagamento('recusado');
                     clearInterval(interval);
                 }
-            }, 180000);
+            }, 3000);
         }
         return () => clearInterval(interval);
     }, [estadoPagamento, pixData]);
@@ -49,7 +48,6 @@ export default function DadosPagamento({ metodo, total }: DadosPagamentoProps) {
             if (response.success && response.data) {
                 setPixData({
                     qrCodeBase64: response.data.point_of_interaction.transaction_data.qr_code_base64,
-                    copiaECola: response.data.point_of_interaction.transaction_data.qr_code,
                     paymentId: response.data.id.toString()
                 });
             }
@@ -81,11 +79,6 @@ export default function DadosPagamento({ metodo, total }: DadosPagamentoProps) {
                                         alt="QR Code Pix"
                                         style={{ width: '200px', height: '200px' }}
                                     />
-                                </div>
-
-                                <div className="">
-                                    <p>Clique para copiar o código:</p>
-                                    <input type="text" className="ring-2 ring-blue-500 rounded-lg p-4 bg-gray-100 my-3" onClick={() => navigator.clipboard.writeText(pixData?.copiaECola || '')} readOnly value={pixData?.copiaECola} />
                                 </div>
                                 <div><h2>{<Temporizador initialMinutes={5} initialSeconds={0} />}</h2></div>
                                 <p className="text-gray-800 font-bold"><em>Aguardando confirmação do pagamento...</em></p>

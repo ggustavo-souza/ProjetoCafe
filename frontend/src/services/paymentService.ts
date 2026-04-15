@@ -11,4 +11,9 @@ export async function createQRcode(total: number) {
     return response.json();
 }
 
+export async function paymentStatus(paymentId: string) {
+    const response = await fetch(`${apiUrl}/status/${paymentId}`);
+    return response.json();
+}
+
 

@@ -9,6 +9,10 @@ export async function paymentRoutes(fastify: FastifyInstance) {
     fastify.post(ROUTES.PAYMENT.QRCODE, async (request, reply) => {
         return paymentController.createQRcode(request, reply);
     });
+
+    fastify.get(ROUTES.PAYMENT.STATUS, async (request, reply) => {
+        return paymentController.paymentStatus(request, reply);
+    });
 }
 
 
