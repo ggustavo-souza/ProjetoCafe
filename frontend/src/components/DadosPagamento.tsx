@@ -12,7 +12,7 @@ initMercadoPago("TEST-e42304be-7aa3-483e-86b6-5a799d0a26f8");
 
 export default function DadosPagamento({ metodo, total }: DadosPagamentoProps) {
 
-    const [estadoPagamento, setEstadoPagamento] = useState<'idle' | 'gerando' | 'pendente' | 'aprovado' | 'recusado'>('idle');
+    const [estadoPagamento, setEstadoPagamento] = useState<'idle' | 'gerando' | 'pendente' | 'aprovado' | 'recusado' | 'expirado'>('idle');
     const [pixData, setPixData] = useState<{
         qrCodeBase64: string; paymentId: string
     } | null>(null);
@@ -80,8 +80,14 @@ export default function DadosPagamento({ metodo, total }: DadosPagamentoProps) {
                                         style={{ width: '200px', height: '200px' }}
                                     />
                                 </div>
-                                <div><h2>{<Temporizador initialMinutes={5} initialSeconds={0} />}</h2></div>
+                                <div><h2>{<Temporizador initialMinutes={3} initialSeconds={0} expirando={() => setEstadoPagamento('expirado')} />}</h2></div>
                                 <p className="text-gray-800 font-bold"><em>Aguardando confirmação do pagamento...</em></p>
+                            </div>
+                        )}
+                        {estadoPagamento === 'expirado' && (
+                            <div className="text-center">
+                                <p className="text-red-500 font-bold mb-4">O tempo limite para pagamento expirou.</p>
+                                <button type="button" className="p-4 bg-blue-500 text-white rounded-lg font-bold cursor-pointer" onClick={gerarQrcode}>Gerar Novo QR Code</button>
                             </div>
                         )}
 
