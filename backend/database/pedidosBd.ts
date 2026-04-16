@@ -59,7 +59,6 @@ class PedidosBd {
                 total: pedido.total,
                 metodo: pedido.formaPagamento,
                 mesa: "Mesa " + pedido.mesaNumero,
-                status: pedido.status,
                 criadoEm: pedido.criadoEm,
                 itens: pedido.itens.map(item => ({
                     id: item.produto.id,

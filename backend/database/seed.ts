@@ -49,23 +49,20 @@ async function seed() {
             formaPagamento: "Pix",
             mesaNumero: 1,
             total: 10.00,
-            status: "Pendente",
             criadoEm: new Date(),
         },
         {
             id: 2,
-            formaPagamento: "Cartão",
+            formaPagamento: "Pix",
             mesaNumero: 2,
             total: 15.00,
-            status: "Pendente",
             criadoEm: new Date(),
         },
         {
             id: 3,
-            formaPagamento: "Dinheiro",
+            formaPagamento: "Pix",
             mesaNumero: 3,
             total: 20.00,
-            status: "Pendente",
             criadoEm: new Date(),
         }
     ]).returning();
