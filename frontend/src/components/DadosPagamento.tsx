@@ -3,14 +3,22 @@ import LoadingCircle from "./Loading";
 import { createQRcode, paymentStatus } from "../services/paymentService";
 import { initMercadoPago } from "@mercadopago/sdk-react";
 import Temporizador from "./Temporizador";
+import { criarPedido } from "../services/pedidosService";
+
 interface DadosPagamentoProps {
     metodo: string;
     total: number;
+    itens: {
+        id: number;
+        nome: string;
+        preco: number;
+    }[];
+    mesa: string | null;
 }
 
 initMercadoPago("TEST-e42304be-7aa3-483e-86b6-5a799d0a26f8");
 
-export default function DadosPagamento({ metodo, total }: DadosPagamentoProps) {
+export default function DadosPagamento({ metodo, total, itens, mesa }: DadosPagamentoProps) {
 
     const [estadoPagamento, setEstadoPagamento] = useState<'idle' | 'gerando' | 'pendente' | 'aprovado' | 'recusado' | 'expirado'>('idle');
     const [pixData, setPixData] = useState<{
@@ -27,6 +35,12 @@ export default function DadosPagamento({ metodo, total }: DadosPagamentoProps) {
                     console.log(status.data.status)
                     if (status.data.status === 'approved') {
                         setEstadoPagamento('aprovado');
+                        try {
+                            const response = await criarPedido(total, metodo, itens, mesa);
+                        } catch (error) {
+                            console.error("Erro ao criar pedido.", error);
+                            setEstadoPagamento('recusado');
+                        }
                         clearInterval(interval);
                     }
                 } catch (error) {
@@ -88,6 +102,16 @@ export default function DadosPagamento({ metodo, total }: DadosPagamentoProps) {
                             <div className="text-center">
                                 <p className="text-red-500 font-bold mb-4">O tempo limite para pagamento expirou.</p>
                                 <button type="button" className="p-4 bg-blue-500 text-white rounded-lg font-bold cursor-pointer" onClick={gerarQrcode}>Gerar Novo QR Code</button>
+                            </div>
+                        )}
+                        {estadoPagamento === 'aprovado' && (
+                            <div className="text-center">
+                                <p className="text-green-500 font-bold mb-4">Pagamento aprovado!</p>
+                            </div>
+                        )}
+                        {estadoPagamento === 'recusado' && (
+                            <div className="text-center">
+                                <p className="text-red-500 font-bold mb-4">Pagamento recusado.</p>
                             </div>
                         )}
 

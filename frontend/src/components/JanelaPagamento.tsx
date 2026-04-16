@@ -4,10 +4,16 @@ import DadosPagamento from "./DadosPagamento";
 
 interface janelaPagamentoProps {
     total: number,
+    itens: {
+        id: number;
+        nome: string;
+        preco: number;
+    }[];
     setClose: () => void;
+    mesa: string | null;
 }
 
-export default function JanelaPagamento({ total, setClose }: janelaPagamentoProps) {
+export default function JanelaPagamento({ total, itens, setClose, mesa }: janelaPagamentoProps) {
 
     const [metodo, setMetodo] = useState("");
 
@@ -26,7 +32,7 @@ export default function JanelaPagamento({ total, setClose }: janelaPagamentoProp
                             setMetodo={setMetodo}
                         />)}
                     {metodo !== "" && (
-                        <DadosPagamento metodo={metodo} total={total} />
+                        <DadosPagamento metodo={metodo} total={total} itens={itens} mesa={mesa} />
                     )}
                 </div>
             </div>

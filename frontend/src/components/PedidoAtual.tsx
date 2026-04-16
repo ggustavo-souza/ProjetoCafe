@@ -90,16 +90,19 @@ export default function PedidoAtual({ mesa, itens }: PedidoAtualProps) {
                     </div>
                     <button
                         className="w-full cursor-pointer text-white py-4 rounded-md bg-green-500 hover:bg-green-600 transition-colors font-bold text-xl shadow-md"
-                        onClick={() => {setExpandir(false); setJanelaPagamento(true);}}
+                        onClick={() => { setExpandir(false); setJanelaPagamento(true); }}
                     >
                         Finalizar Compra
                     </button>
                 </div>
             </div>
             {janelaPagamento && (
-                <JanelaPagamento 
-                total={total} 
-                setClose={() => setJanelaPagamento(false)} />
+                <JanelaPagamento
+                    total={total}
+                    setClose={() => setJanelaPagamento(false)}
+                    itens={itens}
+                    mesa={mesa}
+                />
             )}
         </>
     );
