@@ -8,7 +8,7 @@ class PedidosBd {
             console.log("Não existem dados ou eles não são compatíveis!")
             return false;
         }
-        
+
         try {
             const [novoPedido] = await db.insert(pedidos).values(dados).returning();
 
@@ -38,6 +38,39 @@ class PedidosBd {
         } catch (error) {
             console.error("Erro ao criar pedido no banco:", error);
             return false;
+        }
+    }
+
+    public async listarPedidos() {
+        try {
+            const result = await db.query.pedidos.findMany({
+                with: {
+                    itens: {
+                        with: {
+                            produto: true
+                        }
+                    }
+                },
+                orderBy: (pedidos, { asc }) => [asc(pedidos.id)]
+            });
+
+            return result.map(pedido => ({
+                id: pedido.id,
+                total: pedido.total,
+                metodo: pedido.formaPagamento,
+                mesa: "Mesa " + pedido.mesaNumero,
+                status: pedido.status,
+                criadoEm: pedido.criadoEm,
+                itens: pedido.itens.map(item => ({
+                    id: item.produto.id,
+                    nome: item.produto.nome,
+                    preco: item.precoUnitario,
+                    quantidade: item.quantidade
+                }))
+            }));
+        } catch (error) {
+            console.error("Erro ao listar pedidos no banco:", error);
+            return [];
         }
     }
 }

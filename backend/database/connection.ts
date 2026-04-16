@@ -12,5 +12,6 @@ if(connectionString === 'error') {
   console.error('O banco de dados não possui uma URL válida');
   process.exit(1);
 }
+import * as schema from './schema';
 
-export const db = drizzle(client);
+export const db = drizzle(client, { schema });

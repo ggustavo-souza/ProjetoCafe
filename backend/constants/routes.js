@@ -22,6 +22,5 @@ export const ROUTES = {
     LIST: "/pedidos",          // GET /pedidos
     VIEW: "/pedidos/:id",     // GET /pedidos/15
     DELETE: "/pedidos/:id",    // DELETE /pedidos/15
-    EDIT: "/pedidos/:id"       // PUT /pedidos/15 
   }
 };

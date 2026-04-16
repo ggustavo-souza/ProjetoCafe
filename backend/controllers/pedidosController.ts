@@ -5,7 +5,6 @@ class PedidosController {
     public async createPedido(request: FastifyRequest, reply: FastifyReply) {
         try {
             const { total, metodo, itens, mesa } = request.body as { total: number, metodo: string, itens: any[], mesa: string | null };
-            
             const dadosPedido = {
                 total,
                 formaPagamento: metodo,
@@ -21,6 +20,15 @@ class PedidosController {
         } catch (error) {
             console.log(error, "Erro ao criar pedido")
             return reply.status(500).send({ error: "Erro ao criar pedido" });
+        }
+    }
+    public async listarPedidos(request: FastifyRequest, reply: FastifyReply) {
+        try {
+            const response = await pedidosBd.listarPedidos();
+            return reply.status(200).send(response);
+        } catch (error) {
+            console.log(error, "Erro ao listar pedidos")
+            return reply.status(500).send({ error: "Erro ao listar pedidos" });
         }
     }
 }

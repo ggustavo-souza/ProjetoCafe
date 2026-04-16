@@ -7,6 +7,7 @@ import HomeUsuario from './views/user/HomeUsuario';
 import AuthAcess from './hooks/useAuth';
 import AuthAcessUser from './hooks/useAuthUser';
 import CardapioAdmin from './views/admin/CardapioAdmin';
+import PedidosAdmin from './views/admin/PedidosAdmin';
 
 function App() {
 
@@ -28,6 +29,11 @@ function App() {
           <Route path='/admin/cardapio' element={
             <AuthAcess>
               <CardapioAdmin />
+            </AuthAcess>
+          } />
+          <Route path='/admin/pedidos' element={
+            <AuthAcess>
+              <PedidosAdmin />
             </AuthAcess>
           } />
         </Routes>

@@ -14,3 +14,13 @@ export async function criarPedido(total: number, metodo: string, itens: {
     });
     return await response.json();
 }
+
+export async function listarPedidos() {
+    const response = await fetch(apiUrl, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+    return await response.json();
+}
