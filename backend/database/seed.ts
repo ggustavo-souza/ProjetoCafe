@@ -67,7 +67,52 @@ async function seed() {
         }
     ]).returning();
 
-    console.log(`${inseridos.length} Produtos criados com sucesso!`);
+    const itensPedidoCriados = await db.insert(itensPedido).values([
+        {
+            id: 1,
+            pedidoId: 1,
+            produtoId: 1,
+            quantidade: 1,
+            precoUnitario: 5.50,
+        },
+        {
+            id: 2,
+            pedidoId: 1,
+            produtoId: 2,
+            quantidade: 1,
+            precoUnitario: 4.00,
+        },
+        {
+            id: 3,
+            pedidoId: 2,
+            produtoId: 1,
+            quantidade: 1,
+            precoUnitario: 5.50,
+        },
+        {
+            id: 4,
+            pedidoId: 2,
+            produtoId: 2,
+            quantidade: 1,
+            precoUnitario: 4.00,
+        },
+        {
+            id: 5,
+            pedidoId: 3,
+            produtoId: 1,
+            quantidade: 1,
+            precoUnitario: 5.50,
+        },
+        {
+            id: 6,
+            pedidoId: 3,
+            produtoId: 2,
+            quantidade: 1,
+            precoUnitario: 4.00,
+        }
+    ]).returning();
+
+    console.log(`${inseridos.length} Produtos criados com sucesso! e ${pedidosCriados.length} Pedidos criados com sucesso! e ${itensPedidoCriados.length} Itens de Pedido criados com sucesso!`);
 }
 
 seed()
