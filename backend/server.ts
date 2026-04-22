@@ -2,6 +2,7 @@ import Fastify from 'fastify';
 import { userRoutes } from './routes/userRoutes.ts';
 import { cardapioRoutes } from './routes/cardapioRoutes.ts'
 import { paymentRoutes } from './routes/paymentRoutes.ts'
+import { pedidosRoutes } from './routes/pedidosRoutes.ts'
 import cors from '@fastify/cors';
 import fastifyStatic from "@fastify/static";
 import path from 'node:path'
@@ -25,6 +26,7 @@ fastify.register(fastifyStatic, {
 fastify.register(userRoutes);
 fastify.register(cardapioRoutes);
 fastify.register(paymentRoutes);
+fastify.register(pedidosRoutes);
 
 fastify.listen({
     port: 3000,
