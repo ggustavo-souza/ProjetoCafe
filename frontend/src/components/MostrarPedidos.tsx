@@ -31,16 +31,16 @@ export default function MostrarPedidos() {
 
     return (
         <>
-            <div>
+            <div className="flex flex-col justify-center items-center w-full p-5">
                 {pedidos.length === 0 ? (
                     <p>Nenhum pedido encontrado</p>
                 ) : (
                     pedidos.map((pedido) => (
-                        <div key={pedido.id}>
-                            <p>{pedido.total}</p>
-                            <p>{pedido.metodo}</p>
-                            <p>{pedido.mesa}</p>
-                            <p>{pedido.itens.map((item) => item.nome).join(", ")}</p>
+                        <div className="ring-2 ring-blue-500 rounded-xl p-5 w-1/2 m-2" key={pedido.id}>
+                            <p className="text-xl text-green-600 font-bold">{"Total: R$ " + pedido.total}</p>
+                            <p className="font-semibold">Método de pagamento: {pedido.metodo}</p>
+                            <p className="font-semibold">Número da mesa: {pedido.mesa}</p>
+                            <p className="font-semibold">Itens pedidos: {pedido.itens.map((item) => item.nome).join(", ")}</p>
                         </div>
                     )))}
             </div>
