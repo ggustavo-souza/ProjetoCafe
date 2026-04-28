@@ -15,7 +15,7 @@ const fastify = Fastify({ logger: true });
 
 fastify.register(cors, {
     origin: '*',
-    methods: 'GET, PUT, DELETE, POST'
+    methods: 'GET, PUT, DELETE, POST, PATCH'
 });
 
 fastify.register(fastifyStatic, {
