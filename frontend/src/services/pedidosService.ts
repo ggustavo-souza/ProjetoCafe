@@ -29,3 +29,14 @@ export async function listarPedidos() {
     });
     return await response.json();
 }
+
+export async function atualizarStatusPedido(id: number, status: string) {
+    const response = await fetch(`${apiUrl}/${id}/status`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ status }),
+    });
+    return await response.json();
+}

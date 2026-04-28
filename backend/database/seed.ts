@@ -49,6 +49,7 @@ async function seed() {
             formaPagamento: "Pix",
             mesaNumero: 1,
             total: 10.00,
+            status: "PENDENTE",
             criadoEm: new Date(),
         },
         {
@@ -56,6 +57,7 @@ async function seed() {
             formaPagamento: "Pix",
             mesaNumero: 2,
             total: 15.00,
+            status: "PENDENTE",
             criadoEm: new Date(),
         },
         {
@@ -63,6 +65,7 @@ async function seed() {
             formaPagamento: "Pix",
             mesaNumero: 3,
             total: 20.00,
+            status: "PRONTO",
             criadoEm: new Date(),
         }
     ]).returning();

@@ -9,7 +9,7 @@ class PedidosController {
                 total,
                 formaPagamento: metodo,
                 mesaNumero: mesa ? parseInt(mesa.replace(/\D/g, ''), 10) || 0 : 0,
-                status: 'Aprovado',
+                status: 'PENDENTE',
             };
 
             const response = await pedidosBd.createPedido(dadosPedido, itens);
@@ -29,6 +29,20 @@ class PedidosController {
         } catch (error) {
             console.log(error, "Erro ao listar pedidos")
             return reply.status(500).send({ error: "Erro ao listar pedidos" });
+        }
+    }
+    public async atualizarStatusPedido(request: FastifyRequest, reply: FastifyReply) {
+        try {
+            const { id } = request.params as { id: string };
+            const { status } = request.body as { status: string };
+            const response = await pedidosBd.updateStatusPedido(parseInt(id), status);
+            if (response) {
+                return reply.status(200).send({ message: "Status do pedido atualizado com sucesso" });
+            }
+            return reply.status(500).send({ error: "Erro ao atualizar status do pedido" });
+        } catch (error) {
+            console.log(error, "Erro ao atualizar status do pedido")
+            return reply.status(500).send({ error: "Erro ao atualizar status do pedido" });
         }
     }
 }

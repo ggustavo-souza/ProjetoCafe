@@ -65,11 +65,21 @@ class PedidosBd {
                     nome: item.produto.nome,
                     preco: item.precoUnitario,
                     quantidade: item.quantidade
-                }))
+                })),
+                status: pedido.status
             }));
         } catch (error) {
             console.error("Erro ao listar pedidos no banco:", error);
             return [];
+        }
+    }
+    public async updateStatusPedido(id: number, status: string) {
+        try {
+            await db.update(pedidos).set({ status }).where(eq(pedidos.id, id));
+            return true;
+        } catch (error) {
+            console.error("Erro ao atualizar status do pedido no banco:", error);
+            return false;
         }
     }
 }

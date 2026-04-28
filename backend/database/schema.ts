@@ -15,6 +15,7 @@ export const pedidos = pgTable("pedidos", {
     formaPagamento: text("forma_pagamento").notNull(),
     mesaNumero: integer("mesa_numero").notNull(),
     total: decimal('total', { precision: 5, scale: 2, mode: 'number' }).notNull(),
+    status: text("status").default('PENDENTE').notNull(),
     criadoEm: timestamp("criado_em").defaultNow().notNull(),
 });
 

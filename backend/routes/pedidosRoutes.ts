@@ -13,4 +13,9 @@ export async function pedidosRoutes(fastify: FastifyInstance) {
     fastify.get(ROUTES.PEDIDOS.LIST, async (request, reply) => {
         return pedidosController.listarPedidos(request, reply);
     });
+
+    // atualizar status do pedido
+    fastify.patch(ROUTES.PEDIDOS.UPDATE_STATUS, async (request, reply) => {
+        return pedidosController.atualizarStatusPedido(request, reply);
+    });
 }
