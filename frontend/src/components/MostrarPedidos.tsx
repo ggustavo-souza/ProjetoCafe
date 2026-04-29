@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { listarPedidos, atualizarStatusPedido } from "../services/pedidosService";
+import LoadingCircle from "./Loading";
 
 interface Pedido {
     id: number;
@@ -16,11 +17,13 @@ interface Pedido {
 
 export default function MostrarPedidos() {
     const [pedidos, setPedidos] = useState<Pedido[]>([]);
+    const [loading, setLoading] = useState(true);
 
     const carregarPedidos = async () => {
         try {
             const data = await listarPedidos();
             setPedidos(data);
+            setLoading(false);
         } catch (error) {
             console.error("Erro ao carregar pedidos:", error);
         }
@@ -31,17 +34,28 @@ export default function MostrarPedidos() {
     }, []);
 
     async function marcarComoPronto(id: number) {
-        await atualizarStatusPedido(id, "PRONTO");
+        setPedidos((prevPedidos) =>
+            prevPedidos.map((pedido) =>
+                pedido.id === id ? { ...pedido, status: "PRONTO" } : pedido
+            )
+        );
+
+        try {
+            await atualizarStatusPedido(id, "PRONTO");
+        } catch (error) {
+            console.error("Erro ao atualizar status:", error);
+            carregarPedidos();
+        }
     }
 
     return (
         <>
             <div className="flex flex-col justify-center items-center w-full p-5">
-                {pedidos.length === 0 ? (
-                    <p>Nenhum pedido encontrado</p>
+                {loading ? <LoadingCircle /> : pedidos.length === 0 ? (
+                    <p className="text-xl">Nenhum pedido pendente</p>
                 ) : (
                     pedidos.map((pedido) => (
-                        <div className="ring-2 ring-blue-500 rounded-xl p-8 w-1/2 m-2" key={pedido.id}>
+                        <div className="ring-2 shadow-md ring-blue-500 rounded-xl p-8 w-1/2 m-2" key={pedido.id}>
                             <p className="text-xl text-green-600 font-bold">{"Total: R$ " + pedido.total}</p>
                             <p className="font-semibold">Método de pagamento: {pedido.metodo}</p>
                             <p className="font-semibold">Número da mesa: {pedido.mesa}</p>
