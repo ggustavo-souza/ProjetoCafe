@@ -33,9 +33,7 @@ export default function FormOpcoesCardapio({ modalOpcoes, modalType, idItem, set
 
         setItem(null);
         try {
-            const response = await viewCardapio(idItem);
-            if (!response.ok) throw new Error("Erro ao buscar o item");
-            const data = await response.json();
+            const data = await viewCardapio(idItem);
             setItem(data);
         } catch (error) {
             console.log("Erro ao carregar item:", error);
@@ -53,11 +51,9 @@ export default function FormOpcoesCardapio({ modalOpcoes, modalType, idItem, set
 
         try {
             if (modalType === 'editar') {
-                const response = await editCardapio(idItem, formData);
-                if (response.ok) {
-                    atualizarLista();
-                    setClose();
-                }
+                await editCardapio(idItem, formData);
+                atualizarLista();
+                setClose();
             }
         } catch (error) {
             console.log("Erro ao editar formulário!", error);
@@ -73,11 +69,9 @@ export default function FormOpcoesCardapio({ modalOpcoes, modalType, idItem, set
 
         try {
             if (dados) {
-                const response = await deleteCardapio(dados.id);
-                if (response.ok) {
-                    atualizarLista();
-                    setClose();
-                }
+                await deleteCardapio(dados.id);
+                atualizarLista();
+                setClose();
             }
         } catch (error) {
             console.log("Ocorreu um erro ao tentar deletar este item!", error)
@@ -86,8 +80,8 @@ export default function FormOpcoesCardapio({ modalOpcoes, modalType, idItem, set
         }
     }
 
-    const handleImageChange = (e) => {
-        const file = e.target.files[0];
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
         if (file) {
             const imageUrl = URL.createObjectURL(file);
             setPreviewUrl(imageUrl);
@@ -155,9 +149,9 @@ export default function FormOpcoesCardapio({ modalOpcoes, modalType, idItem, set
                                         name="categoria" id="categoria" defaultValue={item.categoria}
                                         className="w-full border border-gray-300 p-2.5 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition bg-white"
                                     >
-                                        <option value="bebidas">Bebidas</option>
-                                        <option value="comidas">Comidas</option>
-                                        <option value="sobremesas">Sobremesas</option>
+                                        <option value="Bebidas">Bebidas</option>
+                                        <option value="Comidas">Comidas</option>
+                                        <option value="Sobremesas">Sobremesas</option>
                                     </select>
                                 </div>
                             </div>
@@ -207,10 +201,10 @@ export default function FormOpcoesCardapio({ modalOpcoes, modalType, idItem, set
                     <div className="bg-white p-10 rounded-xl">
                         <p>Deseja realmente excluir o item #{idItem}?</p>
                         <button
-                            className="bg-red-500 font-medium text-white p-3 mt-5 me-2 rounded-lg cursor-pointer hover:bg-red-600"
+                            className="bg-red-600 font-semibold text-white px-6 py-3 mt-5 me-2 rounded-lg cursor-pointer hover:bg-red-700"
                             onClick={() => handleExcluir(idItem)}
                         >Sim, excluir</button>
-                        <button onClick={() => { setClose(); setPreviewUrl(""); atualizarLista() }} className="p-3 font-medium border rounded-lg cursor-pointer hover:bg-blue-50">Cancelar</button>
+                        <button onClick={() => { setClose(); setPreviewUrl(""); atualizarLista() }} className="px-6 py-3 font-semibold text-gray-700 bg-white border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50">Cancelar</button>
                     </div>
                 </div>
             )}

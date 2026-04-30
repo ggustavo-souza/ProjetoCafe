@@ -42,10 +42,11 @@ class CardapioController {
 
         const data = await request.file();
 
-        const id = data.fields.id.value;
+        const id = Number(data.fields.id.value);
         const nome = data.fields.nome?.value;
         const descricao = data.fields.descricao?.value;
-        const preco = parseFloat(data.fields.preco?.value);
+        const precoStr = String(data.fields.preco?.value || "0").replace(',', '.');
+        const preco = parseFloat(precoStr);
         const categoria = data.fields.categoria?.value;
 
         if (data.filename !== "") {
@@ -61,7 +62,7 @@ class CardapioController {
                 categoria,
                 imagem: `/images/${nomeArquivo}`
             };
-            mandarQueryEditar(dadosParaBanco);
+            await mandarQueryEditar(dadosParaBanco);
         } else {
             const dadosParaBanco = {
                 id,
@@ -70,15 +71,19 @@ class CardapioController {
                 preco,
                 categoria
             }
-            mandarQueryEditar(dadosParaBanco)
+            await mandarQueryEditar(dadosParaBanco)
         }
 
         async function mandarQueryEditar(dadosParaBanco: any) {
             try {
                 await cardapioBd.editarItemCardapio(dadosParaBanco);
                 reply.status(200).send({ success: "O item foi editado!" });
-            } catch (error) {
-                reply.status(500).send({ error: `Erro ao editar no banco: ${error} ` });
+            } catch (error: any) {
+                console.error("Erro ao editar item:", error);
+                reply.status(500).send({ 
+                    error: `Erro ao editar no banco: ${error.message || error} `,
+                    details: error.detail || error.code || null
+                });
             }
         }
     }
@@ -92,7 +97,8 @@ class CardapioController {
 
         const nome = data.fields.nome.value;
         const descricao = data.fields.descricao.value;
-        const preco = parseFloat(data.fields.preco.value);
+        const precoStr = String(data.fields.preco.value).replace(',', '.');
+        const preco = precoStr; // Passando como string para o Drizzle/postgres-js lidar corretamente com o tipo decimal
         const categoria = data.fields.categoria.value;
 
         const nomeArquivo = `${Date.now()}-${data.filename}`;
@@ -111,8 +117,12 @@ class CardapioController {
         try {
             await cardapioBd.criarItemCardapio(dadosParaBanco);
             reply.status(200).send({ success: "O item foi adicionado!" });
-        } catch (error) {
-            reply.status(500).send({ error: `Erro ao salvar no banco: ${error} ` });
+        } catch (error: any) {
+            console.error("Erro ao criar item:", error);
+            reply.status(500).send({ 
+                error: `Erro ao salvar no banco: ${error.message || error}`,
+                details: error.detail || error.code || null
+            });
         }
     }
 
@@ -123,10 +133,11 @@ class CardapioController {
                 id: id
             }
             await cardapioBd.deletarItemCardapio(dados);
+            reply.status(200).send({ success: "O item foi deletado!" });
         } catch (error) {
-
+            console.error("Erro ao deletar item:", error);
+            reply.status(500).send({ error: "Erro ao deletar o item no banco de dados" });
         }
-
     }
 }
 

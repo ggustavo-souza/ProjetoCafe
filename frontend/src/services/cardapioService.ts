@@ -22,7 +22,7 @@ export const viewCardapio = async (id: number) => {
             "Content-Type": "application/json",
         },
     });
-    if(!response.ok) {
+    if (!response.ok) {
         throw new Error("Erro ao carregar o item do cardápio");
     }
     return await response.json();
@@ -31,10 +31,7 @@ export const viewCardapio = async (id: number) => {
 export const addCardapio = async (item: any) => {
     const response = await fetch(`${API_URL}/cardapio`, {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(item),
+        body: item,
     });
 
     if (!response.ok) {
@@ -58,7 +55,7 @@ export const editCardapio = async (id: number, formdata: any) => {
 export const deleteCardapio = async (id: number) => {
     const response = await fetch(`${API_URL}/cardapio/${id}`, {
         method: "DELETE",
-        headers: {"Content-Type": "application/json"},
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id }),
     });
     if (!response.ok) {

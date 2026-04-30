@@ -19,19 +19,18 @@ export default function FormAdicionarCardapio({ modalAdicionar, setClose, atuali
         const formData = new FormData(e.currentTarget);
 
         try {
-            const response = await addCardapio(formData);
-            if (response.ok) {
-                atualizarLista();
-                setClose();
-            }
+            await addCardapio(formData);
+            atualizarLista();
+            setPreviewUrl("");
+            setClose();
         } catch (error) {
             setAlert({ message: `Ocorreu um erro: ${error}`, show: true })
             setTimeout(() => setAlert({ message: "", show: false }), 5000)
         }
     }
 
-    const handleImageChange = (e) => {
-        const file = e.target.files[0];
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
         if (file) {
             const imageUrl = URL.createObjectURL(file);
             setPreviewUrl(imageUrl);
@@ -70,9 +69,9 @@ export default function FormAdicionarCardapio({ modalAdicionar, setClose, atuali
                                     name="categoria" id="categoria"
                                     className="w-full border border-gray-300 p-2.5 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition bg-white"
                                 >
-                                    <option value="bebidas">Bebidas</option>
-                                    <option value="comidas">Comidas</option>
-                                    <option value="sobremesas">Sobremesas</option>
+                                    <option value="Bebidas">Bebidas</option>
+                                    <option value="Comidas">Comidas</option>
+                                    <option value="Sobremesas">Sobremesas</option>
                                 </select>
                             </div>
                         </div>
