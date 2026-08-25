@@ -1,12 +1,12 @@
 const apiUrl = "http://localhost:3000/payment";
 
-export async function createQRcode(total: number) {
+export async function createQRcode(total: number, cpf: string) {
     const response = await fetch(`${apiUrl}/qrcode`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({ total }),
+        body: JSON.stringify({ total, cpf }),
     });
     return response.json();
 }

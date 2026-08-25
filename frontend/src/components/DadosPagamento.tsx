@@ -24,6 +24,22 @@ export default function DadosPagamento({ metodo, total, itens, mesa }: DadosPaga
     const [pixData, setPixData] = useState<{
         qrCodeBase64: string; paymentId: string
     } | null>(null);
+    const [cpf, setCpf] = useState("");
+    const [erroCpf, setErroCpf] = useState("");
+
+    const handleCpfChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        let value = e.target.value.replace(/\D/g, "");
+        if (value.length > 11) value = value.slice(0, 11);
+        
+        if (value.length > 9) {
+            value = value.replace(/^(\d{3})(\d{3})(\d{3})(\d{1,2})$/, "$1.$2.$3-$4");
+        } else if (value.length > 6) {
+            value = value.replace(/^(\d{3})(\d{3})(\d{1,3})$/, "$1.$2.$3");
+        } else if (value.length > 3) {
+            value = value.replace(/^(\d{3})(\d{1,3})$/, "$1.$2");
+        }
+        setCpf(value);
+    };
 
     useEffect(() => {
         let interval: ReturnType<typeof setTimeout> = setTimeout(() => { });
@@ -54,9 +70,16 @@ export default function DadosPagamento({ metodo, total, itens, mesa }: DadosPaga
     }, [estadoPagamento, pixData]);
 
     async function gerarQrcode() {
+        setErroCpf("");
+        const cleanCpf = cpf.replace(/\D/g, '');
+        if (cleanCpf.length !== 11) {
+            setErroCpf("O CPF deve conter 11 dígitos.");
+            return;
+        }
+
         try {
             setEstadoPagamento('gerando');
-            const response = await createQRcode(total);
+            const response = await createQRcode(total, cleanCpf);
             console.log(response)
 
             if (response.success && response.data) {
@@ -64,11 +87,15 @@ export default function DadosPagamento({ metodo, total, itens, mesa }: DadosPaga
                     qrCodeBase64: response.data.point_of_interaction.transaction_data.qr_code_base64,
                     paymentId: response.data.id.toString()
                 });
+                setEstadoPagamento('pendente');
+            } else {
+                setErroCpf(response.message || "Erro ao gerar QR Code. Verifique o CPF.");
+                setEstadoPagamento('idle');
             }
-            setEstadoPagamento('pendente')
         } catch (error) {
             console.log(error, "Erro ao gerar QR Code")
-            setEstadoPagamento('idle')
+            setErroCpf("Erro interno no servidor ou na conexão.");
+            setEstadoPagamento('idle');
         }
     }
 
@@ -76,10 +103,21 @@ export default function DadosPagamento({ metodo, total, itens, mesa }: DadosPaga
     return (
         <>
             {metodo === "Pix" && (
-                <div className="justify-center ">
-                    <div className="flex justify-center mt-5">
+                <div className="justify-center w-full">
+                    <div className="flex justify-center mt-5 w-full">
                         {estadoPagamento === 'idle' && (
-                            <button type="submit" className="p-4 bg-blue-500 text-white rounded-lg font-bold cursor-pointer" onClick={gerarQrcode}>Gerar QR Code</button>
+                            <div className="flex flex-col gap-3 w-full max-w-sm">
+                                <label className="text-gray-700 font-bold text-left">Informe seu CPF para o Pix:</label>
+                                <input
+                                    type="text"
+                                    placeholder="000.000.000-00"
+                                    value={cpf}
+                                    onChange={handleCpfChange}
+                                    className="p-3 border border-gray-300 rounded-lg text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
+                                />
+                                {erroCpf && <p className="text-red-500 text-sm font-semibold text-left">{erroCpf}</p>}
+                                <button type="submit" className="p-4 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-bold cursor-pointer transition w-full" onClick={gerarQrcode}>Gerar QR Code</button>
+                            </div>
                         )}
                         {estadoPagamento === 'gerando' && (
                             <LoadingCircle />
